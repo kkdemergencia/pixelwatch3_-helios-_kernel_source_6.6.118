@@ -1,0 +1,68 @@
+### GENERATED SECTION - DO NOT MODIFY - BEGIN ###
+"""Kleaf: Build Android kernels with Bazel."""
+
+bazel_dep(name = "kleaf")
+local_path_override(
+    module_name = "kleaf",
+    path = "external/kleaf",
+)
+
+local_path_override(
+    module_name = "abseil-py",
+    path = "external/python/absl-py",
+)
+
+local_path_override(
+    module_name = "apple_support",
+    path = "external/bazelbuild-apple_support",
+)
+
+bazel_dep(name = "bazel_skylib")
+local_path_override(
+    module_name = "bazel_skylib",
+    path = "external/bazel-skylib",
+)
+
+local_path_override(
+    module_name = "platforms",
+    path = "external/bazelbuild-platforms",
+)
+
+bazel_dep(name = "rules_cc")
+local_path_override(
+    module_name = "rules_cc",
+    path = "external/bazelbuild-rules_cc",
+)
+
+local_path_override(
+    module_name = "rules_java",
+    path = "external/bazelbuild-rules_java",
+)
+
+local_path_override(
+    module_name = "rules_license",
+    path = "external/bazelbuild-rules_license",
+)
+
+bazel_dep(name = "rules_pkg")
+local_path_override(
+    module_name = "rules_pkg",
+    path = "external/bazelbuild-rules_pkg",
+)
+
+local_path_override(
+    module_name = "rules_python",
+    path = "external/bazelbuild-rules_python",
+)
+
+kernel_prebuilt_ext = use_extension(
+    "@kleaf//build/kernel/kleaf:kernel_prebuilt_ext.bzl",
+    "kernel_prebuilt_ext",
+)
+kernel_prebuilt_ext.declare_kernel_prebuilts(
+    name = "gki_prebuilts",
+    local_artifact_path = "prebuilts/boot-artifacts/kernel",
+)
+use_repo(kernel_prebuilt_ext, "gki_prebuilts")
+
+### GENERATED SECTION - DO NOT MODIFY - END ###

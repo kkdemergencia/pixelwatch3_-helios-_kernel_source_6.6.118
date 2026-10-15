@@ -1,0 +1,147 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/gpio/gpio.h>
+
+&tlmm {
+	pmx_ts_int_active {
+		pt_ts_int_active: pt_ts_int_active {
+			mux {
+				pins = "gpio13";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio13";
+				drive-strength = <8>;
+				bias-pull-up;
+				input-enable;
+			};
+		};
+	};
+
+	pmx_ts_int_suspend {
+		pt_ts_int_suspend: pt_ts_int_suspend {
+			mux {
+				pins = "gpio13";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio13";
+				drive-strength = <2>;
+				bias-pull-down;
+				input-enable;
+			};
+		};
+	};
+
+	pmx_ts_reset_active {
+		pt_ts_reset_active: pt_ts_reset_active {
+			mux {
+				pins = "gpio12";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio12";
+				drive-strength = <8>;
+				output-high;
+			};
+		};
+	};
+
+	pmx_ts_reset_suspend {
+		pt_ts_reset_suspend: pt_ts_reset_suspend {
+			mux {
+				pins = "gpio12";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio12";
+				drive-strength = <2>;
+				output-high;
+			};
+		};
+	};
+
+	pmx_ts_release {
+		pt_ts_release: pt_ts_release {
+			mux {
+				pins = "gpio13", "gpio12";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio13", "gpio12";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+};
+
+&qupv3_se1_i2c {
+	status = "okay";
+
+	tsc@24 {
+		compatible = "parade,pt_i2c_adapter";
+		reg = <0x24>;
+		status = "okay";
+		parade,adapter_id = "pt_i2c_adapter";
+
+		pinctrl-names = "pmx_ts_active", "pmx_ts_suspend", "pmx_ts_release";
+		pinctrl-0 = <&pt_ts_int_active &pt_ts_reset_active>;
+		pinctrl-1 = <&pt_ts_int_suspend &pt_ts_reset_suspend>;
+		pinctrl-2 = <&pt_ts_release>;
+
+		panel = <&dsi_rm690c0_amoled_17_cmd>;
+
+		parade,core {
+			parade,name = "pt_core";
+
+			parade,irq_gpio = <&tlmm 13 0>;
+			parade,rst_gpio = <&tlmm 12 0>;
+			parade,hid_desc_register = <1>;
+			/*
+			 * PT_CORE_FLAG_NONE = 0x00
+			 * PT_CORE_FLAG_POWEROFF_ON_SLEEP = 0x02
+			 * PT_CORE_FLAG_RESTORE_PARAMETERS = 0x04
+			 * PT_CORE_FLAG_DEEP_STANDBY = 0x08
+			 * PT_CORE_FLAG_SKIP_SYS_SLEEP = 0x10
+			 * PT_CORE_FLAG_SKIP_RUNTIME = 0x20
+			 * PT_CORE_FLAG_SKIP_RESUME = 0x40
+			 */
+			parade,flags = <0x34>;
+			/* PT_CORE_EWG_TAP_TAP */
+			parade,easy_wakeup_gesture = <0x7E>;
+			/* 0:AUTO 1:PIP1_ONLY 2:PIP2_CAPABLE*/
+			parade,config_dut_generation = <1>;
+			/* 0:False 1:True*/
+			parade,watchdog_force_stop = <0>;
+			/*
+			 * PT_PANEL_ID_DISABLE = 0x00
+			 * PT_PANEL_ID_BY_BL  = 0x01
+			 * PT_PANEL_ID_BY_SYS_INFO  = 0x02
+			 * PT_PANEL_ID_BY_MFG_DATA  = 0x04
+			 */
+			parade,panel_id_support = <0x04>;
+			/* 0:PIP, 1: Hybrid HID, 2: pure HID */
+			parade,protocol_mode = <0>;
+
+			parade,mt {
+				parade,name = "pt_mt";
+				parade,inp_dev_name = "ParadeTouchScreen";
+				/*
+				 * PT_MT_FLAG_NONE = 0x00
+				 * PT_MT_FLAG_FLIP = 0x08
+				 * PT_MT_FLAG_INV_X = 0x10
+				 * PT_MT_FLAG_INV_Y = 0x20
+				 * PT_MT_FLAG_VKEYS = 0x40
+				 */
+				parade,flags = <0x28>; /* rotate 90 degree */
+			};
+		};
+	};
+};
+

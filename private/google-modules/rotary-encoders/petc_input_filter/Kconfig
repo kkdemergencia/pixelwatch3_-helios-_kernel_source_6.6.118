@@ -1,0 +1,13 @@
+#
+# PETC input filter driver configuration
+#
+
+config INPUT_PETC_INPUT_FILTER
+	tristate "PETC input filter driver"
+	depends on INPUT
+	help
+	  Say Y to enable support for the PETC input filter.
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called petc-if.

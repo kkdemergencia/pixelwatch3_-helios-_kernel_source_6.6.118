@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "ddk_module",
+)
+
+ddk_module(
+    name = "sr200",
+    srcs = [
+        "sr200.c",
+    ],
+    out = "sr200.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)

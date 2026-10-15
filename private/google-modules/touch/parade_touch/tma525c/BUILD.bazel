@@ -1,0 +1,229 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "ddk_module",
+    "kernel_module_group",
+)
+
+ddk_module(
+    name = "pt",
+    srcs = [
+        "mcu_touch.c",
+        "mcu_touch.h",
+        "pt_core.c",
+        "pt_core.h",
+        "pt_mt_common.c",
+        "pt_regs.h",
+    ],
+    out = "pt.ko",
+    conditional_srcs = {
+        "CONFIG_TOUCHSCREEN_PARADE_MT_A": {
+            True: [
+                "pt_mta.c",
+            ],
+        },
+        "CONFIG_TOUCHSCREEN_PARADE_MT_B": {
+            True: [
+                "pt_mtb.c",
+            ],
+        },
+        "CONFIG_TOUCHSCREEN_PARADE_BUTTON": {
+            True: [
+                "pt_btn.c",
+            ],
+        },
+        "CONFIG_TOUCHSCREEN_PARADE_PEN": {
+            True: [
+                "pt_pen.c",
+            ],
+        },
+        "CONFIG_TOUCHSCREEN_PARADE_PROXIMITY": {
+            True: [
+                "pt_proximity.c",
+            ],
+        },
+    },
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "pt_debug",
+    srcs = [
+        "pt_core.h",
+        "pt_debug.c",
+        "pt_regs.h",
+    ],
+    out = "pt_debug.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":pt",
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "pt_device_access",
+    srcs = [
+        "pt_core.h",
+        "pt_device_access.c",
+        "pt_regs.h",
+    ],
+    out = "pt_device_access.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":pt",
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "pt_i2c",
+    srcs = [
+        "pt_core.h",
+        "pt_i2c.c",
+        "pt_regs.h",
+    ],
+    out = "pt_i2c.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":pt",
+        ":ptdevtree",
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "pt_loader",
+    srcs = [
+        "pt_core.h",
+        "pt_loader.c",
+        "pt_regs.h",
+    ],
+    out = "pt_loader.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":pt",
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "ptdevtree",
+    srcs = [
+        "pt_core.h",
+        "pt_devtree.c",
+        "pt_platform.c",
+        "pt_platform.h",
+        "pt_regs.h",
+    ],
+    out = "ptdevtree.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        "CONFIG_TOUCHSCREEN_PARADE_BINARY_FW_UPGRADE",
+        "CONFIG_TOUCHSCREEN_PARADE_MANUAL_TTCONFIG_UPGRADE",
+        "PT_PINCTRL_EN",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":pt",
+        "//private/google-modules/display/watch/mcu-offload/mcu_display",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)
+
+kernel_module_group(
+    name = "tma525c",
+    srcs = [
+        ":pt",
+        ":pt_debug",
+        ":pt_device_access",
+        ":pt_i2c",
+        ":pt_loader",
+        ":ptdevtree",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)

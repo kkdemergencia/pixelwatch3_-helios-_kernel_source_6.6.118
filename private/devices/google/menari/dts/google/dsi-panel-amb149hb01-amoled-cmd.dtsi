@@ -1,0 +1,295 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&mdss_mdp {
+	/*
+	 * The panel name (ex: qcom,mdss_dsi_amb149hb01_amoled_15_cmd) must match
+	 * the 3rd argument to PANEL_CREATE_ENTRY() in xbl (boot_images)
+	 * QcomPkg/SocPkg/AthertonPkg/Library/MDPPlatformLib/MDPPlatformLib.c
+	 */
+
+	dsi_amb149hb01_amoled_15_cmd: qcom,mdss_dsi_amb149hb01_amoled_15_cmd {
+		qcom,mdss-dsi-panel-name = "FK23-SDC-AMB149HB01";
+		qcom,mdss-dsi-panel-type = "dsi_cmd_mode";
+		qcom,mdss-dsi-panel-physical-type = "oled";
+		qcom,mdss-dsi-virtual-channel-id = <0>;
+		qcom,mdss-dsi-stream = <0>;
+		qcom,mdss-dsi-bpp = <24>;
+		qcom,mdss-dsi-color-order = "rgb_swap_rgb";
+		qcom,mdss-dsi-underflow-color = <0xff>;
+		qcom,mdss-dsi-border-color = <0>;
+		qcom,mdss-pan-physical-width-dimension = <38>;
+		qcom,mdss-pan-physical-height-dimension = <38>;
+
+		qcom,dsi-ctrl-num = <0>;
+		qcom,dsi-phy-num = <0>;
+
+		qcom,mdss-dsi-traffic-mode = "burst_mode";
+		qcom,mdss-dsi-lane-map = "lane_map_0123";
+		qcom,mdss-dsi-bllp-eof-power-mode;
+		qcom,mdss-dsi-bllp-power-mode;
+		qcom,mdss-dsi-lane-0-state;
+		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+		qcom,mdss-dsi-mdp-trigger = "none";
+		qcom,mdss-dsi-reset-sequence = <1 20>, <0 10>, <1 20>;
+		qcom,mdss-dsi-te-pin-select = <1>;
+		qcom,mdss-dsi-te-dcs-command = <1>;
+		qcom,mdss-dsi-te-check-enable;
+		qcom,mdss-dsi-te-using-te-pin;
+
+		qcom,mdss-dsi-t-clk-post = <0x0C>;
+		qcom,mdss-dsi-t-clk-pre = <0x17>;
+
+		qcom,platform-te-gpio = <&tlmm 73 0>;
+		qcom,panel-te-source = <0>;
+
+		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+		qcom,mdss-dsi-bl-min-level = <1>;
+		qcom,mdss-dsi-bl-max-level = <1284>; /* LBM 1-4, NBM 5-1027, HBM 1028-1284 */
+		qcom,mdss-brightness-max-level = <1284>;
+		qcom,mdss-brightness-default-level = <736>;
+		qcom,mdss-dsi-bl-aod-min-level = <1>;
+		qcom,mdss-dsi-bl-aod-max-level = <659>; /* LBM 1-4, AOD 5-548, Fake AoD 549-659 */
+		qcom,mdss-dsi-bl-fake-aod-transition-point = <548>;
+		qcom,mdss-dsi-bl-fake-aod-daily-max-uptime = <3600>;
+		qcom,mdss-dsi-bl-hbm-min-level = <767>;
+		qcom,mdss-dsi-bl-hbm-max-level = <1023>;
+
+		qcom,mdss-dsi-bl-inverted-dbv;
+
+		qcom,mdss-dsi-bl-lbm-alpha-masks = <0xbf 0xcc 0xd9 0xe6>;
+		qcom,mdss-dsi-bl-lbm-frame-transition-reg = <0x90>;
+		qcom,mdss-dsi-bl-lbm-frame-transition = <0x21 0x21 0x21 0x31 0x41 0x51>; /* Min 4 frame */
+
+		qcom,dsi-bl-lbm-dbv-reg = <0x91>;
+		qcom,dsi-bl-aod-dbv-reg = <0x69>;
+		qcom,dsi-bl-inter-dbv-reg = <0x51>;
+		qcom,dsi-bl-hbm-dbv-reg = <0x63>;
+
+		qcom,mdss-dsi-panel-sn-config {
+			qcom,mdss-dsi-panel-sn-pre-command = [15 00 00 00 00 00 02 fe 10];
+			qcom,mdss-dsi-panel-sn-post-command = [15 00 00 00 00 00 02 fe 00];
+			qcom,mdss-dsi-panel-sn-reg = <0x00>;
+			qcom,mdss-dsi-panel-sn-readback-size = <23>;
+		};
+
+		qcom,mdss-dsi-bl-dyn-ramp-config {
+			qcom,mdss-dsi-bl-dyn-ramp-pre-command = [15 00 00 00 00 00 02 fe 42];
+			qcom,mdss-dsi-bl-dyn-ramp-fixed-time-command = [15 00 00 00 00 00 02 10 10];
+			qcom,mdss-dsi-bl-dyn-ramp-fixed-slope-command = [15 00 00 00 00 00 02 10 1c];
+			qcom,mdss-dsi-bl-dyn-ramp-post-command = [15 00 00 00 00 00 02 fe 00];
+			qcom,mdss-dsi-bl-dyn-ramp-up-reg = <0x14>;
+			qcom,mdss-dsi-bl-dyn-ramp-down-reg = <0x13>;
+			qcom,mdss-dsi-bl-dyn-ramp-time-reg = <0x12>;
+		};
+
+
+		/*
+		 * Defines the panel DCS commands to be sent to the MCU display driver.
+		 *
+		 * The `dsi_cmd_set_type` enum values in `dsi_defs.h` (e.g. `DSI_CMD_SET_ON`)
+		 * are mapped to corresponding `mcu_display_panel_command_type` values in
+		 * `mcu_display_exports.h` (e.g. `MCU_DISPLAY_PANEL_CMD_TYPE_ON`).
+		 */
+		qcom,mdss-dsi-mcu-display-panel-cmd-types {
+			cmd@0 {
+				dsi_cmd_set_type = <1>;
+				mcu_display_panel_cmd_type = <0>;
+			};
+			cmd@1 {
+				dsi_cmd_set_type = <6>;
+				mcu_display_panel_cmd_type = <1>;
+			};
+			cmd@2 {
+				dsi_cmd_set_type = <16>;
+				mcu_display_panel_cmd_type = <2>;
+			};
+			cmd@3 {
+				dsi_cmd_set_type = <17>;
+				mcu_display_panel_cmd_type = <3>;
+			};
+			cmd@4 {
+				dsi_cmd_set_type = <18>;
+				mcu_display_panel_cmd_type = <4>;
+			};
+			cmd@5 {
+				dsi_cmd_set_type = <25>;
+				mcu_display_panel_cmd_type = <5>;
+			};
+			cmd@6 {
+				dsi_cmd_set_type = <26>;
+				mcu_display_panel_cmd_type = <6>;
+			};
+		};
+
+		qcom,mdss-dsi-display-timings {
+			timing@0 {
+				qcom,mdss-dsi-panel-phy-timings =  [00 1A 07 06 16 21 07
+					07 07 02 04 00 17 0C];
+				qcom,mdss-dsi-panel-framerate = <60>;
+				qcom,mdss-dsi-panel-width = <480>;
+				qcom,mdss-dsi-panel-height = <480>;
+				qcom,mdss-dsi-h-front-porch = <40>;
+				qcom,mdss-dsi-h-back-porch = <20>;
+				qcom,mdss-dsi-h-sync-skew = <0>;
+				qcom,mdss-dsi-v-front-porch = <16>;
+				qcom,mdss-dsi-v-back-porch = <8>;
+				qcom,mdss-dsi-h-left-border = <0>;
+				qcom,mdss-dsi-h-right-border = <0>;
+				qcom,mdss-dsi-v-top-border = <0>;
+				qcom,mdss-dsi-v-bottom-border = <0>;
+
+				qcom,mdss-dsi-on-command-state = "dsi_lp_mode";
+				qcom,mdss-dsi-on-command = [
+					/* Page select */
+					15 00 00 00 00 00 02 fe 82
+					/* VGL timing shift */
+					15 00 00 00 00 00 02 a6 00
+					/* Page select */
+					15 00 00 00 00 00 02 fe 90
+					/* Disable ACL dimming */
+					15 00 00 00 00 00 02 ad 00
+					/* Page select */
+					15 00 00 00 00 00 02 fe 00
+					/* Setup 2A */
+					39 00 00 00 00 00 05 2a 00 00 01 df
+					/* Setup 2B */
+					39 00 00 00 00 00 05 2b 00 00 01 df
+					/* TE on */
+					15 00 00 00 00 00 02 35 00
+					/* Enable auto frame insertion */
+					15 00 00 00 00 00 02 68 e0
+					/* 1Hz idle for HBM/NBM/AOD */
+					15 00 00 00 00 00 02 67 c2
+					/* AoD blip issue */
+					15 00 00 00 00 00 02 fe 48
+					15 00 00 00 00 00 02 00 03
+					15 00 00 00 00 00 02 01 00
+					15 00 00 00 00 00 02 02 ff
+					15 00 00 00 00 00 02 03 20
+					15 00 00 00 00 00 02 04 5c
+					15 00 00 00 00 00 02 05 01
+					15 00 00 00 00 00 02 06 00
+					15 00 00 00 00 00 02 07 00
+					15 00 00 00 00 00 02 08 00
+					15 00 00 00 00 00 02 09 1b
+					15 00 00 00 00 00 02 0a 00
+					15 00 00 00 00 00 02 0b ff
+					15 00 00 00 00 00 02 0c 00
+					15 00 00 00 00 00 02 0d 00
+					15 00 00 00 00 00 02 0e 03
+					15 00 00 00 00 00 02 0f 00
+					15 00 00 00 00 00 02 10 00
+					15 00 00 00 00 00 02 11 00
+					15 00 00 00 00 00 02 20 00
+					15 00 00 00 00 00 02 21 00
+					15 00 00 00 00 00 02 22 00
+					15 00 00 00 00 00 02 23 00
+					15 00 00 00 00 00 02 24 00
+					15 00 00 00 00 00 02 25 00
+					15 00 00 00 00 00 02 26 00
+					15 00 00 00 00 00 02 27 00
+					15 00 00 00 00 00 02 28 00
+					/* HBM blip issue */
+					15 00 00 00 00 00 02 fe 70
+					15 00 00 00 00 00 02 43 8b
+					15 00 00 00 00 00 02 d0 cc
+					15 00 00 00 00 00 02 d1 01
+					15 00 00 00 00 00 02 d2 f8
+					15 00 00 00 00 00 02 55 16
+					/* Page select */
+					15 00 00 00 00 00 02 fe f0
+					15 00 00 00 00 00 02 43 8b
+					15 00 00 00 00 00 02 8a cc
+					15 00 00 00 00 00 02 8b 01
+					15 00 00 00 00 00 02 8c f8
+					15 00 00 00 00 00 02 6a 16
+					/* Page select */
+					15 00 00 00 00 00 02 fe f2
+					15 00 00 00 00 00 02 43 8b
+					15 00 00 00 00 00 02 8a cc
+					15 00 00 00 00 00 02 8b 01
+					15 00 00 00 00 00 02 8c f8
+					15 00 00 00 00 00 02 6a 16
+					/* Page select */
+					15 00 00 00 00 00 02 fe 20
+					15 00 00 00 00 00 02 44 c2
+					15 00 00 00 00 00 02 5d fc
+					15 00 00 00 00 00 02 5e 01
+					/* Page select */
+					15 00 00 00 00 00 02 fe 42
+					15 00 00 00 00 00 02 cf 22
+					15 00 00 00 00 00 02 d4 22
+					15 00 00 00 00 00 02 d9 22
+					15 00 00 00 00 00 02 c1 03
+					15 00 00 00 00 00 02 c2 30
+					15 00 00 00 00 00 02 c4 03
+					15 00 00 00 00 00 02 ac a0
+					/* Page select */
+					15 00 00 00 00 00 02 fe 20
+					/* ESD status should reset only when RESX=low */
+					15 00 00 00 00 00 02 0c 84
+					/* Page select */
+					15 00 00 00 00 00 02 fe 80
+					/* FD off */
+					15 00 00 00 00 00 02 b4 48
+					/* FD off */
+					15 00 00 00 00 00 02 af 02
+					/* Add swire 81 pulse to avoid slow ELVSS transition */
+					15 00 00 00 00 00 02 b0 51
+					/* Page select */
+					15 00 00 00 00 00 02 fe 00
+					/* Sleep out, wait 50ms */
+					05 00 00 00 32 00 01 11
+					/* Disp on */
+					05 00 00 00 00 00 01 29
+				];
+				qcom,mdss-dsi-off-command-state = "dsi_lp_mode";
+				qcom,mdss-dsi-off-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					05 00 00 00 00 00 01 28    /* Disp off */
+					05 00 00 00 54 00 01 10    /* Sleep in, wait 84ms */
+					15 00 00 00 00 00 02 4f 01 /* Deep standby */
+				];
+				qcom,mdss-dsi-lp1-command-state = "dsi_lp_mode";
+				qcom,mdss-dsi-lp1-command = [
+					15 00 00 00 00 00 02 fe 42 /* Page select */
+					15 00 00 00 00 00 02 10 10 /* Fixed time ramp */
+					15 00 00 00 00 00 02 12 02 /* 8 frames ramp */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					05 00 00 00 00 00 01 39    /* Enter idle */
+				];
+				qcom,mdss-dsi-lp2-command-state = "dsi_lp_mode";
+				qcom,mdss-dsi-lp2-command = [
+					15 00 00 00 00 00 02 fe 42 /* Page select */
+					15 00 00 00 00 00 02 10 10 /* Fixed time ramp */
+					15 00 00 00 00 00 02 12 02 /* 8 frames ramp */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					05 00 00 00 00 00 01 39    /* Enter idle */
+				];
+				qcom,mdss-dsi-nolp-command = [
+					15 00 00 00 00 00 02 fe 42 /* Page select */
+					15 00 00 00 00 00 02 10 10 /* Fixed time ramp */
+					15 00 00 00 00 00 02 12 02 /* 8 frames ramp */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					05 00 00 00 00 00 01 38    /* Exit idle */
+				];
+				qcom,mdss-dsi-hbm-on-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 11 00 02 66 02 /* Enter HBM, wait 17 ms */
+				];
+				qcom,mdss-dsi-hbm-off-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 11 00 02 66 00 /* Leave HBM, wait 17 ms */
+				];
+				qcom,mdss-dsi-dimming-on-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 00 00 02 53 28 /* Enable dimming */
+				];
+				qcom,mdss-dsi-dimming-off-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 00 00 02 53 20 /* Disable dimming */
+				];
+			};
+		};
+	};
+};

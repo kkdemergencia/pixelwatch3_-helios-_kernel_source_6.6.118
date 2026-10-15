@@ -1,0 +1,83 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_module",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+filegroup(
+    name = "nanohub.kconfig",
+    srcs = [
+        "Kconfig",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)
+
+ddk_module(
+    name = "nanohub",
+    srcs = [
+        "comms.c",
+        "comms.h",
+        "main.c",
+        "main.h",
+        "nanohub.h",
+    ],
+    out = "nanohub.ko",
+    hdrs = [
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/soc/msm:msm_soc_headers",
+    ],
+    conditional_srcs = {
+        "CONFIG_NANOHUB_SPI": {
+            True: [
+                "spi.c",
+                "spi.h",
+            ],
+        },
+        "CONFIG_NANOHUB_SPI_AMBIQ_HD": {
+            True: [
+                "spi_ambiq.h",
+            ],
+        },
+        "CONFIG_NANOHUB_SPI_AMBIQ_FD": {
+            True: [
+                "spi_ambiq.h",
+            ],
+        },
+        "CONFIG_NANOHUB_BL_NXP": {
+            True: [
+                "bl_nxp.c",
+                "bl_nxp.h",
+            ],
+        },
+        "CONFIG_NANOHUB_BL_ST": {
+            True: [
+                "bl_st.c",
+                "bl_st.h",
+            ],
+        },
+    },
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-Wno-format-security",
+    ],
+    kconfig = ":nanohub.kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers",
+    ],
+)

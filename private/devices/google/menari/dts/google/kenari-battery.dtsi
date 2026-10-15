@@ -1,0 +1,142 @@
+
+#include "kenari-battery-profiles.dtsi"
+
+&google_battery {
+		google,chg-battery-capacity = <459>;
+
+		/* charge table - FK23 Cell ERS Rev 5 */
+		google,chg-temp-limits = <0 100 200 430 460>;
+		/* Extra CV limit (4.26) is added to adjust for IR drop
+		 * and only used at room temperature.
+		 */
+		google,chg-cv-limits = <
+					4200000 4250000 4260000 4480000
+					>;
+		/* units are C rate in percent */
+		google,chg-cc-limits = <
+			 54  28	 28  28		//  250mA->4.20V, 125mA->4.48V
+			115  66	 66  66		//  525mA->4.20V, 300mA->4.48V
+			218 218	218 158		// 1000mA->4.26V, 725mA->4.48V
+			197 197  99  99		//  900mA->4.25V, 450mA->4.48V
+		>;
+
+		/* Time to full (TTF) */
+		google,ttf-temp-idx = <2>;
+		google,ttf-adapter = <870>;
+		google,ttf-soc-table =  <50 82 97 100>;
+		google,ttf-elap-table = <16 18 59 328>;
+		google,ttf-tier-table = <0 69 90>;
+
+		/* Delay msecs between retries until sw5100_bms and gbms_virt_storage is ready */
+		google,batt-init-delay = <2000>;
+		/* Number of times to retry init in case of some failures */
+		google,init-retries = <30>;
+
+		/* battery poll rate during charging */
+		google,charging-update-interval = <10000>;
+		/* soc smoothing */
+		google,rl_delta-max-soc = <3>;
+		/* TTF ref table is sized max(chg-battery-capacity, fg-learned-capacity) */
+		google,ttf-use-fg-capacity;
+		/* Use binned cycle counts as total count rather than fg */
+		google,sum-bins-for-cycle-count;
+
+		/* Age Adjusted Float Voltage. 1 == enabled */
+		google,aafv-config = <1>;
+		/* Age Adjusted Charge Rate. 1 == enabled */
+		/* 95% after 400 cycles, 80% after 800 cycles */
+		google,aacr-config = <1>;
+		/* AACR uses reference charge capacity */
+		google,aacr-algo = <3>;
+		/* Force an 80% battery capacity at/after 800 cycles */
+		google,aacr-cliff-capacity-rate = <80>;
+		google,aacr-cycle-max = <800>;
+
+		google,batt-id-110-vdl {
+			google,batt-id = <110>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-162-atl {
+			google,batt-id = <162>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-200-atl {
+			google,batt-id = <200>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-270-vdl {
+			google,batt-id = <270>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-316-atl {
+			google,batt-id = <316>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-383-atl {
+			google,batt-id = <383>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+		google,batt-id-487-vdl {
+			google,batt-id = <487>;
+			google,aafv-ref-cycles = <200 400 600 800>;
+			google,aafv-ref-offset = < 20  40  60  80>;
+			google,aacr-ref-cycles = <399 400 799 800>;
+			google,aacr-ref-fade10 = <  0  50  50 200>;
+			/* Disable opt out of age adjusted charging */
+			google,aacp-opt-out-cut-off-cycles = <0>;
+		};
+};
+
+&google_charger {
+		google,thermal-mitigation = <1025000 875000 775000
+						675000 575000 475000
+						325000 150000>;
+		//google,thermal-pd-wa;
+		google,fv-max-uv = <4480000>;
+		google,chg-termination-5v;
+};
+
+&google_bms {
+        google,soc_shutdown_offset = <3>;
+};
+
+&pm5100_charger {
+	qcom,fv-max-uv = <4480000>;
+	qcom,fcc-max-ua = <1000000>;
+	qcom,chg-term-current-ma = <(-25)>;
+	google,aicl-start-at-max;
+};
+
+&pm5100_qbg {
+	qcom,iterm-ma = <25>;
+};

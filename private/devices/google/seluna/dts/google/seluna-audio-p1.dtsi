@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "seluna-adsp-bt-lpi_i2s3.dtsi"
+
+&besbev_codec {
+	qcom,visense-support = <1>;
+	qcom,cam-therm-enabled = <1>;
+};
+
+&monaco_snd {
+	qcom,wcn-btfm = <0>;
+
+	qcom,cdc-dmic01-gpios = <&cdc_dmic01_gpios>;
+};

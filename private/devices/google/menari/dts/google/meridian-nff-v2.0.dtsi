@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "../google-dts-base/sw5100-rt595.dtsi"
+#include "menari-nff-v2.0-battery.dtsi"
+#include "menari-common.dtsi"
+#include "menari-nff-common.dtsi"
+#include "menari-nfc.dtsi"
+#include "menari-uwb.dtsi"
+#include "menari-crown-proto.dtsi"
+#include "menari-bt.dtsi"
+#include "menari-wifi.dtsi"
+#include "menari-sdhc.dtsi"
+#include "menari-haptics.dtsi"
+#include "menari-audio.dtsi"
+#include "menari-mcu-power.dtsi"
+
+&mcu {
+	board_type = "meridian_nff2";
+	main_image = "mcu_meridian_nff2_main.elf";
+	wbl_image = "mcu_meridian_nff2_wbl.bin";
+	sbl_image = "mcu_meridian_nff2_sbl.bin";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_meridian_nff2.bin";
+};

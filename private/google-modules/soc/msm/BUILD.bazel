@@ -1,0 +1,377 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@bazel_skylib//rules:common_settings.bzl",
+    "bool_flag",
+    "string_flag",
+)
+load(
+    "@bazel_skylib//rules:write_file.bzl",
+    "write_file",
+)
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_headers",
+    "kernel_abi",
+    "kernel_build",
+    "kernel_build_config",
+    "kernel_dtstree",
+    "kernel_images",
+    "kernel_modules_install",
+    "kernel_unstripped_modules_archive",
+    "merged_kernel_uapi_headers",
+)
+load(
+    "@rules_pkg//pkg:mappings.bzl",
+    "pkg_files",
+    "strip_prefix",
+)
+load(
+    ":bazel/constants.scl",
+    "KERNEL_DIR",
+    "SW5100_DTBS",
+    "SW5100_EXTERNAL_MODULES_DDK_UAPI_HEADERS",
+    "SW5100_EXTERNAL_MODULES_TARGETS",
+)
+load(
+    ":bazel/extracted_system_dlkm.bzl",
+    "extracted_system_dlkm",
+)
+load(
+    ":bazel/merged_external_kernel_modules_uapi_headers.bzl",
+    "merged_external_kernel_modules_uapi_headers",
+)
+load(
+    ":bazel/modules.bzl",
+    "SW5100_COMMON_GKI_MODULES",
+    "SW5100_KUNIT_GKI_MODULES",
+    "get_sw5100_in_tree_modules",
+)
+load(
+    ":bazel/nocheck_defconfig_fragment.bzl",
+    "nocheck_defconfig_fragment",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+filegroup(
+    name = "sw5100.dt-bindings",
+    srcs = glob([
+        "include/**",
+    ]),
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+filegroup(
+    name = "sw5100_sources",
+    srcs = glob(
+        ["**"],
+        exclude = [
+            ".*",
+            ".*/**",
+            "BUILD.bazel",
+            "**/*.bzl",
+        ],
+    ) + [
+        "//private/google-modules/nanohub:nanohub.kconfig",
+        "//private/google-modules/wac/autobahn:autobahn.kconfig",
+    ],
+)
+
+filegroup(
+    name = "undefined_filegroup",
+    srcs = [
+    ],
+)
+
+ddk_headers(
+    name = "msm_soc_headers",
+    hdrs = glob([
+        "include/**/*.h",
+    ]) + ["//private/msm-google:all_headers_aarch64"],
+    linux_includes = ["include"],
+    visibility = [
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+ddk_headers(
+    name = "mcu_transport_header",
+    hdrs = [
+        "include/mcu_transport_protocol/nanohub_exports.h",
+    ],
+    includes = ["include/mcu_transport_protocol"],
+    visibility = [
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+filegroup(
+    name = "kasan_sw_tags_kcov_fragments",
+    srcs = [
+        "arch/arm64/configs/kasan_sw_tags.fragment",
+        "arch/arm64/configs/kcov.fragment",
+    ],
+)
+
+filegroup(
+    name = "kunit_fragment",
+    srcs = [
+        "arch/arm64/configs/kunit.fragment",
+    ],
+)
+
+label_flag(
+    name = "msm_kernel_build",
+    build_setting_default = ":sw5100",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+        "//private/msm-google-modules:__subpackages__",
+    ],
+)
+
+label_flag(
+    name = "gki_kernel_build",
+    build_setting_default = "@kleaf//common:kernel_aarch64",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+label_flag(
+    name = "gki_kernel_images",
+    build_setting_default = "@kleaf//common:kernel_aarch64_images",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+label_flag(
+    name = "gki_boot_img",
+    build_setting_default = "@kleaf//common:kernel_aarch64_gki_artifacts",
+)
+
+string_flag(
+    name = "mcu_transport",
+    build_setting_default = ":undefined_filegroup",
+    values = [
+        "autobahn",
+        "autobahn_frame_1032b",
+        "nanohub",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+bool_flag(
+    name = "enable_kunit",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "kunit_enabled",
+    flag_values = {":enable_kunit": "1"},
+)
+
+config_setting(
+    name = "mcu_transport_autobahn",
+    flag_values = {
+        ":mcu_transport": "autobahn",
+    },
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+config_setting(
+    name = "mcu_transport_autobahn_frame_1032b",
+    flag_values = {
+        ":mcu_transport": "autobahn_frame_1032b",
+    },
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+config_setting(
+    name = "mcu_transport_nanohub",
+    flag_values = {
+        ":mcu_transport": "nanohub",
+    },
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+kernel_build_config(
+    name = "build.config.sw5100.generated",
+    srcs = [
+        # do not sort
+        "build.config.sw5100",
+        "//{}:build.config.common".format(KERNEL_DIR),
+        "//{}:build.config.aarch64".format(KERNEL_DIR),
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+nocheck_defconfig_fragment(
+    name = "monaco_gki_fragment_generated",
+    base_defconfig_fragment_file = "arch/arm64/configs/monaco_gki.fragment",
+    overlay_defconfig_fragment_files = [
+        "arch/arm64/configs/sw5100.fragment",
+    ],
+)
+
+kernel_dtstree(
+    name = "sw5100.dt",
+    srcs = glob([
+        "arch/arm64/boot/dts/**",
+    ]) + [":sw5100.dt-bindings"],
+    makefile = "arch/arm64/boot/dts/google/Makefile",
+)
+
+kernel_build(
+    name = "sw5100",
+    srcs = [
+        "//{}:kernel_aarch64_sources".format(KERNEL_DIR),
+        ":sw5100_sources",
+    ],
+    outs = SW5100_DTBS,
+    base_kernel = ":gki_kernel_build",
+    build_config = ":build.config.sw5100.generated",
+    collect_unstripped_modules = True,
+    defconfig_fragments = [
+        # do not sort
+        ":monaco_gki_fragment_generated",
+        "arch/arm64/configs/sw5100.fragment",
+    ],
+    dtstree = ":sw5100.dt",
+    kconfig_ext = "Kconfig.ext",
+    kmi_symbol_list = "@kleaf//common:android/abi_gki_aarch64_pixel_watch",
+    make_goals = [
+        "modules",
+        "dtbs",
+    ],
+    module_outs = get_sw5100_in_tree_modules(),
+    strip_modules = True,
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+kernel_modules_install(
+    name = "sw5100_modules_install",
+    kernel_build = ":msm_kernel_build",
+    kernel_modules = SW5100_EXTERNAL_MODULES_TARGETS,
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+kernel_unstripped_modules_archive(
+    name = "sw5100_unstripped_modules_archive",
+    kernel_build = ":msm_kernel_build",
+    kernel_modules = SW5100_EXTERNAL_MODULES_TARGETS,
+)
+
+merged_kernel_uapi_headers(
+    name = "sw5100_merged_kernel_and_in_tree_uapi_headers",
+    kernel_build = ":msm_kernel_build",
+    kernel_modules = SW5100_EXTERNAL_MODULES_TARGETS,
+)
+
+merged_external_kernel_modules_uapi_headers(
+    name = "sw5100_merged_kernel_uapi_headers",
+    external_modules_kernel_uapi_headers = SW5100_EXTERNAL_MODULES_DDK_UAPI_HEADERS,
+    merged_kernel_uapi_headers = ":sw5100_merged_kernel_and_in_tree_uapi_headers",
+)
+
+write_file(
+    name = "sw5100_system_dlkm_modules_list",
+    out = "system_dlkm_modules_list",
+    content = SW5100_COMMON_GKI_MODULES + select({
+        ":kunit_enabled": SW5100_KUNIT_GKI_MODULES,
+        "//conditions:default": [],
+    }),
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+extracted_system_dlkm(
+    name = "sw5100_extracted_system_dlkm",
+    gki_modules = SW5100_COMMON_GKI_MODULES + select({
+        ":kunit_enabled": SW5100_KUNIT_GKI_MODULES,
+        "//conditions:default": [],
+    }),
+    images = ":gki_kernel_images",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+kernel_images(
+    name = "sw5100_system_dlkm_image",
+    base_kernel_images = ":gki_kernel_images",
+    build_system_dlkm = True,
+    kernel_modules_install = ":sw5100_modules_install",
+    system_dlkm_modules_list = ":sw5100_system_dlkm_modules_list",
+    system_dlkm_props = "system_dlkm.props.sw5100",
+    deps = [
+        "selinux/system_file_contexts",
+    ],
+)
+
+kernel_abi(
+    name = "sw5100_abi",
+    kernel_build = ":msm_kernel_build",
+    kernel_modules = SW5100_EXTERNAL_MODULES_TARGETS,
+    kmi_symbol_list_add_only = True,
+    module_grouping = False,
+)
+
+pkg_files(
+    name = "sw5100_pkg_files",
+    srcs = [
+        ":gki_boot_img",
+        ":gki_kernel_build",
+        ":sw5100",
+        ":sw5100_extracted_system_dlkm",
+        ":sw5100_merged_kernel_uapi_headers",
+        ":sw5100_modules_install",
+        ":sw5100_system_dlkm_image",
+        ":sw5100_unstripped_modules_archive",
+    ],
+    strip_prefix = strip_prefix.files_only(),
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+# These files are referred to individually when the sw5100_pixel_watch_dist()
+# macro is expanded. Therefore, they must individually be exported to
+# subpackages in private/devices/google.
+exports_files(
+    [
+        "selinux/file_contexts",
+        "vendor_dlkm.blocklist.monaco",
+        "vendor_dlkm.props.sw5100",
+        "vendor_kernel_boot_modules.monaco",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)

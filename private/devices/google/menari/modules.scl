@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""File containing information about kernel modules for Menari."""
+
+MENARI_VENDOR_KERNEL_BOOT_MODULES = [
+]
+
+MENARI_VENDOR_KERNEL_BOOT_RECOVERY_MODULES = [
+    # keep sorted
+    "google-kamino.ko",
+    "google-wdc.ko",
+    "i2c_arbitration_interface.ko",
+    "mcu_transport.ko",
+    "touch_rm6d031.ko",
+    "wear_touch_interface.ko",
+]
+
+# Menari-specific modules to load during 2nd stage init
+MENARI_VENDOR_DLKM_MODULES = [
+    # keep sorted
+    "cl_dsp-core.ko",
+    "cs40l26-core.ko",
+    "cs40l26-i2c.ko",
+    "google-kamino.ko",
+    "google-wdc.ko",
+    "i2c_arbitration_interface.ko",
+    "mcu_transport.ko",
+    "nitrous.ko",
+    "pat9xxx.ko",
+    "petc_input_filter.ko",
+    "snd-soc-cs40l26.ko",
+    "sr200.ko",
+    "synadhd4381.ko",
+    "touch_rm6d031.ko",
+    "wear_touch_interface.ko",
+]
+
+MENARI_VENDOR_DLKM_BLOCKLIST_MODULES = [
+    # keep sorted
+    "synadhd4381.ko",
+]

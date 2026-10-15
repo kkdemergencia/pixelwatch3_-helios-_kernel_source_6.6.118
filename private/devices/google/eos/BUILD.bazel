@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "kernel_dtstree",
+)
+load(
+    "//private/google-modules/soc/msm:bazel/pixel_watch_utils.bzl",
+    "sw5100_pixel_watch_dist",
+    "sw5100_pixel_watch_dtbo_image",
+)
+load(
+    ":dt_overlays.scl",
+    "EOS_OVERLAYS",
+)
+load(
+    ":modules.scl",
+    "EOS_VENDOR_DLKM_BLOCKLIST_MODULES",
+    "EOS_VENDOR_DLKM_MODULES",
+    "EOS_VENDOR_KERNEL_BOOT_MODULES",
+    "EOS_VENDOR_KERNEL_BOOT_RECOVERY_MODULES",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+kernel_dtstree(
+    name = "eos.dt",
+    srcs = glob(
+        ["dts/**"],
+    ) + [
+        "//private/google-modules/soc/msm:sw5100.dt-bindings",
+    ],
+    makefile = "dts/Makefile",
+)
+
+sw5100_pixel_watch_dtbo_image(
+    name = "eos_dtbo",
+    dtb_overlays = EOS_OVERLAYS,
+    dtstree = ":eos.dt",
+)
+
+sw5100_pixel_watch_dist(
+    name = "sw5100_eos_dist",
+    device_name = "eos",
+    device_vendor_dlkm_blocklist = EOS_VENDOR_DLKM_BLOCKLIST_MODULES,
+    device_vendor_dlkm_modules = EOS_VENDOR_DLKM_MODULES,
+    device_vendor_kernel_boot_modules = EOS_VENDOR_KERNEL_BOOT_MODULES,
+    device_vendor_kernel_boot_recovery_modules = EOS_VENDOR_KERNEL_BOOT_RECOVERY_MODULES,
+    dtbo_image = ":eos_dtbo",
+)

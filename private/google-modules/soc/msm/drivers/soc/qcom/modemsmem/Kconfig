@@ -1,0 +1,6 @@
+config MODEMSMEM
+	bool "Modem SMEM driver"
+	default N
+	---help---
+	Enable to pass device information and other data to shared memory for
+	the modem subsystem

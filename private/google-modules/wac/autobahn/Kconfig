@@ -1,0 +1,83 @@
+config AUTOBAHN
+	tristate "Autobahn"
+	select IIO
+	help
+	  Enable support for the autobahn sensorhub driver.
+
+	  This driver supports the android autobahn sensorhub. The nanohub
+	  interface kernel exports and nanohub character device interface are
+	  exposed when this is enabled.
+
+	  If in doubt, say N here. Set to M to compile this driver as a module.
+
+if AUTOBAHN
+
+config AUTOBAHN_DASSERT
+	bool "Autobahn debug assert"
+	default n
+	help
+	  Enable Autobahn debug assertions.
+
+config AUTOBAHN_TESTS
+	tristate "Autobahn tests"
+	default n
+	help
+	  Set to Y to enable Autobahn Kunit tests.
+
+config AUTOBAHN_FAULT_INJECTION
+	bool "Autobahn fault injection framework"
+	default y
+	depends on FAULT_INJECTION
+	depends on FAULT_INJECTION_DEBUG_FS
+	help
+	  Enable Autobahn driver fault injection capabilities.
+
+	  All faults are disabled on boot and must be explicitly enabled.
+
+	  Fault injection is configurable through the DebugFS interface,
+	  in /sys/kernel/debug/fault_*.
+
+choice
+	prompt "Integrity Check Algorithm"
+	default AUTOBAHN_INTEGRITY_CHECK_CRC16_CCITT
+	help
+	  This option allows to select the algorithm used to verify the
+	  integrity of the data received from the sensor hub. The selected
+	  algorithm will be used to compute a checksum on the received data
+	  and compare it with the checksum received from the sensor hub.
+	  If the checksums do not match, the data will be discarded.
+
+config AUTOBAHN_INTEGRITY_CHECK_CRC16_CCITT
+	bool "CRC16_CCITT"
+	help
+	  Select CRC16_CCITT as the integrity check algorithm.
+	  This algorithm is a 16-bit cyclic redundancy check based on
+	  the CCITT polynomial. The selected algorithm will be used
+	  to compute a checksum on the received data and compare it
+	  with the checksum received from the sensor hub. If the
+	  checksums do not match, the data will be discarded.
+
+config AUTOBAHN_INTEGRITY_CHECK_CRC32
+	bool "CRC32"
+	help
+	  Select CRC32 as the integrity check algorithm.
+	  This algorithm is a 32-bit cyclic redundancy check based on
+	  the IEEE polynomial. The selected algorithm will be used
+	  to compute a checksum on the received data and compare it
+	  with the checksum received from the sensor hub. If the
+	  checksums do not match, the data will be discarded.
+
+endchoice
+
+config AUTOBAHN_FRAME_SIZE_BYTES
+	int "The frame size in bytes"
+	default 264
+	range 264 65544
+	help
+	  Total number of bytes in a frame. A frame consists of: header, payload
+	  and foooter/trailer. Among other things, the header specifies the
+	  frame type, payload size and, optionally, the channel number.
+	  The payload usually contains the datagram(s), while the footer/trailer
+	  contains an integrity check.
+
+endif # AUTOBAHN

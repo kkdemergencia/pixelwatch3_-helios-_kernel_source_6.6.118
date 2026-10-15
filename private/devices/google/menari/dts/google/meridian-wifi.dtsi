@@ -1,0 +1,5 @@
+#include "menari-wifi.dtsi"
+
+&wlan_gpios {
+	size = "small";
+};

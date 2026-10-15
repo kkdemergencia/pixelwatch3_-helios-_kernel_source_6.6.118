@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0
+
+//Additional glinkpkt nodes
+
+&soc {
+	qcom,glinkpkt {
+		qcom,glinkpkt-tourbillon-data {
+			qcom,glinkpkt-edge = "adsp";
+			qcom,glinkpkt-ch-name = "tourbillon-data";
+			qcom,glinkpkt-dev-name = "tourbillon-data";
+		};
+		qcom,glinkpkt-tourbillon-ctrl {
+			qcom,glinkpkt-edge = "adsp";
+			qcom,glinkpkt-ch-name = "tourbillon-ctrl";
+			qcom,glinkpkt-dev-name = "tourbillon-ctrl";
+		};
+	};
+};

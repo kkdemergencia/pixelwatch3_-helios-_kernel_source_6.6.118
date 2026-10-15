@@ -1,0 +1,4 @@
+config CONFIG_WEAR_TOUCH_INTERFACE
+	tristate "Wear Touch Interface"
+	help
+	  Enable this module to provide a common touch interface driver.

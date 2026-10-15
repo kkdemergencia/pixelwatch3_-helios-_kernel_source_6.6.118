@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/gpio/gpio.h>
+
+// MCU root node and common definitions, available at /proc/device-tree/mcu.
+/ {
+	mcu_root {
+		target-path = "/";
+		__overlay__ {
+			mcu: mcu {};
+		};
+	};
+};
+
+&soc {
+	mcu_display: mcu_display {
+		compatible = "google,mcu_display";
+		display_pins,display-mux-select-gpio = <&tlmm 35 IRQ_TYPE_NONE>;
+	};
+
+	gpiochipwake0: gpiochipwake0 {
+		compatible = "google,gpiochipwake0";
+		mcu-pins,crash-gpios = <&tlmm 19 0>;
+	};
+};
+
+&tlmm {
+	display_pins {
+		display_mux_select: display-mux-select {
+			mux {
+				pins = "gpio35";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio35";
+				drive-strength = <6>;
+				bias-disable;
+				output-high;
+			};
+		};
+	};
+
+	mcu-pins {
+		crash {
+			mux {
+				pins = "gpio19";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio19";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;
+				input-enable;
+			};
+		};
+	};
+};

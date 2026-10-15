@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "ddk_module",
+    "kernel_module_group",
+)
+
+ddk_module(
+    name = "sn220-i2c",
+    srcs = [
+        "common.c",
+        "common.h",
+        "common_ese.c",
+        "common_ese.h",
+        "i2c_drv.c",
+        "i2c_drv.h",
+    ],
+    out = "sn220_i2c.ko",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "p73",
+    srcs = [
+        "common.h",
+        "common_ese.h",
+        "i2c_drv.h",
+        "p73.c",
+        "p73.h",
+    ],
+    out = "p73.ko",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        ":sn220-i2c",
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)
+
+kernel_module_group(
+    name = "nfc_modules",
+    srcs = [
+        ":p73",
+        ":sn220-i2c",
+    ],
+    visibility = [
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)

@@ -1,0 +1,53 @@
+
+&sw5100_batterydata {
+	#include "qbg-battery-profile-selene-id39.dtsi"
+	#include "qbg-battery-profile-selene-id56.dtsi"
+};
+
+&google_battery {
+		google,chg-battery-capacity = <306>;
+
+		/* charge table */
+		google,chg-temp-limits = <0 100 150 250 410 450>;
+		google,chg-cv-limits = <4480000>;
+		/* units are C rate in percent */
+		google,chg-cc-limits = <
+			41
+			58
+			148
+			164
+			41
+		>;
+
+		/* Time to full (TTF) */
+		google,ttf-temp-idx= <2>;
+		google,ttf-adapter = <2600>;
+		google,ttf-soc-table =  <93 96 98 100>;
+		google,ttf-elap-table = <31 62 122 154>;
+		google,ttf-tier-table = <0 90 95>;
+		/* TTF ref table is sized max(chg-battery-capacity, fg-learned-capacity) */
+		google,ttf-use-fg-capacity;
+};
+
+&google_charger {
+		google,thermal-mitigation = <4000000 3500000 3000000
+						2500000 2000000 1500000
+						1000000 500000>;
+		//google,thermal-pd-wa;
+		google,fv-max-uv = <4480000>;
+		google,chg-termination-5v;
+};
+
+&google_bms {
+	google,soc_shutdown_offset = <3>;
+};
+
+&pm5100_charger {
+	qcom,fv-max-uv = <4480000>;
+	qcom,usb-icl-ua = <600000>;
+	qcom,fcc-max-ua = <500000>;
+};
+
+&pm5100_qbg {
+       qcom,iterm-ma = <20>;
+};

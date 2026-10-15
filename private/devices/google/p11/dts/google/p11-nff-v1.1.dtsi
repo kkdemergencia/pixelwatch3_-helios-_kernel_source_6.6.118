@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "p11-common.dtsi"
+
+&mcu {
+	board_type = "p11_nff11";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_p11_nff11.bin";
+};
+
+&thermal_zones {
+	audio-therm {
+		status = "disable";
+	};
+};
+
+&besbev_codec {
+	google,mic-bias1-always-on = <1>;
+};
+
+&pmx_sde {
+	sde_dsi_nffv1_1: sde_dsi_nffv1_1 {
+		pinconf {
+			pins = "gpio1", "gpio2";
+			function = "normal";
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+			bias-disable;
+			output-high;
+		};
+	};
+};
+
+&sde_dsi {
+	pinctrl-0 = <&sde_dsi_nffv1_1 &sde_te_active>;
+	pinctrl-1 = <&sde_dsi_nffv1_1 &sde_te_suspend>;
+};

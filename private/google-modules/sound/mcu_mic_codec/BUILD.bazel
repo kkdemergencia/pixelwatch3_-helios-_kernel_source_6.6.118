@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_module",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+ddk_module(
+    name = "mcu_mic_codec",
+    srcs = glob([
+        "*.c",
+    ]),
+    out = "mcu_mic_codec.ko",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)

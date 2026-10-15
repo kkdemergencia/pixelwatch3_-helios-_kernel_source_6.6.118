@@ -1,0 +1,7 @@
+&sw5100_batterydata {
+       qbg_battery_profile_compat_luna_id39:
+       #include "qbg-battery-profile-compat-luna-id39.dtsi"
+
+       qbg_battery_profile_compat_luna_id56:
+       #include "qbg-battery-profile-compat-luna-id56.dtsi"
+};

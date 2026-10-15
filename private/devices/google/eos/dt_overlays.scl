@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Specifies the names of device-specific devicetree overlays."""
+
+EOS_OVERLAYS = [
+    "eos-nff-v2.0-overlay.dtbo",
+    "eos-proto-v2.0-overlay.dtbo",
+    "eos-evt-v1.0-overlay.dtbo",
+    "eos-evt-v2.0-overlay.dtbo",
+    "eos-dvt-v1.0-overlay.dtbo",
+    "eos-pvt-v1.0-overlay.dtbo",
+    "aurora-proto-v2.0-overlay.dtbo",
+    "aurora-evt-v1.0-overlay.dtbo",
+    "aurora-evt-v2.0-overlay.dtbo",
+    "aurora-dvt-v1.0-overlay.dtbo",
+    "aurora-pvt-v1.0-overlay.dtbo",
+]

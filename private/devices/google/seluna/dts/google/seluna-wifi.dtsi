@@ -1,0 +1,59 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Google Agumon wlan device tree source
+// Copyright 2023 Google,LLC
+
+
+&tlmm {
+	wlan_pins {
+		wl_reg_on: wl-reg-on {
+			mux {
+				pins = "gpio33";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio33";
+				drive-strength = <2>;
+				bias-disable;
+				output-low;
+			};
+		};
+
+		wl_dev_wake: wl-dev-wake {
+			mux {
+				pins = "gpio42";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio42";
+				drive-strength = <2>;
+				bias-disable;
+				output-low;
+			};
+		};
+
+		wl_host_wake: wl-host-wake {
+			mux {
+				pins = "gpio8";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio8";
+				drive-strength = <2>; /* 2 mA */
+				bias-pull-down; /* pull down */
+				input-enable;
+			};
+		};
+	};
+};
+
+&soc {
+	wlan_gpios: wlan-gpios  {
+		status = "ok";
+		compatible = "android,syna_wlan";
+		wl_reg_on = <&tlmm 33 0>; /* wlan reg_on pin */
+		wl_host_wake = <&tlmm 8 0>; /* wlan host wake pin */
+		wl_dev_wake = <&tlmm 42 0>; /* wlan dev pin */
+		pinctrl-names = "default";
+		pinctrl-0  = <&wl_reg_on &wl_dev_wake &wl_host_wake>;
+	};
+};

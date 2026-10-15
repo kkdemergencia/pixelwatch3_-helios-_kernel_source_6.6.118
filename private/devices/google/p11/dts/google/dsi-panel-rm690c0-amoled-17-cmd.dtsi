@@ -1,0 +1,155 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&mdss_mdp {
+	/*
+	 * The panel name (ex: qcom,mdss_dsi_rm690c0_amoled_17_cmd) must match
+	 * the 3rd argument to PANEL_CREATE_ENTRY() in xbl (boot_images)
+	 * QcomPkg/SocPkg/AthertonPkg/Library/MDPPlatformLib/MDPPlatformLib.c
+	 */
+
+	dsi_rm690c0_amoled_17_cmd: qcom,mdss_dsi_rm690c0_amoled_17_cmd {
+		qcom,mdss-dsi-panel-name = "P11-BOE-RM690C0";
+		qcom,mdss-dsi-panel-type = "dsi_cmd_mode";
+		qcom,mdss-dsi-panel-physical-type = "oled";
+		qcom,mdss-dsi-virtual-channel-id = <0>;
+		qcom,mdss-dsi-stream = <0>;
+		qcom,mdss-dsi-bpp = <24>;
+		qcom,mdss-dsi-color-order = "rgb_swap_rgb";
+		qcom,mdss-dsi-underflow-color = <0xff>;
+		qcom,mdss-dsi-border-color = <0>;
+		qcom,mdss-pan-physical-width-dimension = <31>;
+		qcom,mdss-pan-physical-height-dimension = <31>;
+
+		qcom,dsi-ctrl-num = <0>;
+		qcom,dsi-phy-num = <0>;
+
+		qcom,mdss-dsi-traffic-mode = "burst_mode";
+		qcom,mdss-dsi-lane-map = "lane_map_0123";
+		qcom,mdss-dsi-bllp-eof-power-mode;
+		qcom,mdss-dsi-bllp-power-mode;
+		qcom,mdss-dsi-lane-0-state;
+		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+		qcom,mdss-dsi-mdp-trigger = "none";
+		qcom,mdss-dsi-reset-sequence = <1 10>, <0 10>, <1 20>;
+		qcom,mdss-dsi-te-pin-select = <1>;
+		qcom,mdss-dsi-te-dcs-command = <1>;
+		qcom,mdss-dsi-te-check-enable;
+		qcom,mdss-dsi-te-using-te-pin;
+		qcom,mdss-dsi-t-clk-post = <0x08>;
+		qcom,mdss-dsi-t-clk-pre = <0x0c>;
+
+		qcom,platform-te-gpio = <&tlmm 73 0>;
+		qcom,panel-te-source = <0>;
+
+		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+		qcom,mdss-dsi-bl-min-level = <1>;
+		qcom,mdss-dsi-bl-max-level = <256>; /* NBM 0-255, HBM 256 */
+		qcom,mdss-brightness-max-level = <256>;
+		qcom,mdss-brightness-default-level = <125>;
+		qcom,mdss-dsi-bl-aod-min-level = <1>;
+		qcom,mdss-dsi-bl-aod-max-level = <255>;
+		qcom,mdss-dsi-bl-hbm-min-level = <255>;
+		qcom,mdss-dsi-bl-hbm-max-level = <255>;
+
+		qcom,dsi-bl-aod-dbv-reg = <0x69>;
+		qcom,dsi-bl-inter-dbv-reg = <0x51>;
+		qcom,dsi-bl-hbm-dbv-reg = <0x63>;
+
+		qcom,mdss-dsi-display-timings {
+			timing@0 {
+				qcom,mdss-dsi-panel-framerate = <60>;
+				qcom,mdss-dsi-panel-width = <402>;
+				qcom,mdss-dsi-panel-height = <402>;
+				qcom,mdss-dsi-h-front-porch = <40>;
+				qcom,mdss-dsi-h-back-porch = <20>;
+				qcom,mdss-dsi-h-pulse-width = <20>;
+				qcom,mdss-dsi-h-sync-skew = <0>;
+				qcom,mdss-dsi-v-front-porch = <20>;
+				qcom,mdss-dsi-v-back-porch = <20>;
+				qcom,mdss-dsi-v-pulse-width = <20>;
+				qcom,mdss-dsi-h-left-border = <0>;
+				qcom,mdss-dsi-h-right-border = <0>;
+				qcom,mdss-dsi-v-top-border = <0>;
+				qcom,mdss-dsi-v-bottom-border = <0>;
+
+				qcom,mdss-dsi-crit-on-command = [
+					15 01 00 00 00 00 02 fe 00 /* Page select */
+					39 00 00 00 00 00 05 2A 00 28 01 B9 /* Column start addr */
+				];
+
+				qcom,mdss-dsi-on-command = [
+					15 01 00 00 00 00 02 fe 00 /* Page select */
+					39 00 00 00 00 00 05 2A 00 28 01 B9 /* Column start addr */
+					39 00 00 00 00 00 05 2B 00 00 01 91 /* Row start addr */
+					39 00 00 00 00 00 05 31 00 29 01 B8 /* V partial area */
+					39 00 00 00 00 00 05 30 00 01 01 90 /* H partial area */
+					05 00 00 00 00 00 01 12    /* Partial display mode on */
+					15 00 00 00 00 00 02 35 02 /* TE on */
+					15 01 00 00 00 00 02 FE 42 /* Enable HBM reg 0x63 */
+					15 01 00 00 00 00 02 04 D2
+					15 00 00 00 00 00 02 12 03 /* Set 16 dimming steps */
+					15 00 00 00 00 00 02 11 00 /* Set 1 frame per dimming step */
+					15 01 00 00 00 00 02 FE 20
+					15 01 00 00 00 00 02 4A 80
+					15 01 00 00 00 00 02 FE 00
+					15 01 00 00 00 00 02 63 FF /* Set 1000 nits in HBM */
+					05 00 00 00 64 00 01 11    /* Sleep out, wait 100ms */
+					05 00 00 00 00 00 01 29    /* Display on */
+				];
+				qcom,mdss-dsi-off-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					05 00 00 00 00 00 01 28    /* Display off */
+					05 00 00 00 54 00 01 10    /* Sleep in, wait 84ms */
+					15 00 00 00 00 00 02 4f 01 /* Deep sleep */
+				];
+				qcom,mdss-dsi-on-command-state = "dsi_lp_mode";
+				qcom,mdss-dsi-off-command-state = "dsi_hs_mode";
+				qcom,mdss-dsi-lp1-command-state = "dsi_hs_mode";
+				qcom,mdss-dsi-lp1-command = [
+					/* wait 267ms in total to ensure 16 dimming steps complete */
+					15 00 00 00 ff 00 02 fe 00 /* Page select, wait 255ms */
+					05 00 00 00 0c 00 01 00    /* No operation, wait 12ms */
+					15 00 00 00 11 00 02 53 20 /* Disable dimming, wait 17ms */
+					05 00 00 00 11 00 01 39    /* Enter idle, wait 17ms */
+					15 00 00 00 00 00 02 53 28 /* Enable dimming */
+					15 00 00 00 00 00 02 fe 42
+					15 00 00 00 00 00 02 10 10 /* Enable AOD dbv hw dimming */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					39 00 00 00 00 00 05 2A 00 28 01 B9 /* Column start addr */
+					15 01 00 00 00 00 02 fe 80 /* Page select */
+					15 01 00 00 00 00 02 a0 00 /* APRC off */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+				];
+				qcom,mdss-dsi-lp2-command-state = "dsi_hs_mode";
+				qcom,mdss-dsi-lp2-command = [
+					/* wait 267ms in total to ensure 16 dimming steps complete */
+					15 00 00 00 ff 00 02 fe 00 /* Page select, wait 255ms */
+					05 00 00 00 0c 00 01 00    /* No operation, wait 12ms */
+					15 00 00 00 11 00 02 53 20 /* Disable dimming, wait 17ms */
+					05 00 00 00 11 00 01 39    /* Enter idle, wait 17ms */
+					15 00 00 00 00 00 02 53 28 /* Enable dimming */
+					15 00 00 00 00 00 02 fe 42
+					15 00 00 00 00 00 02 10 10 /* Enable AOD dbv hw dimming */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+				];
+				qcom,mdss-dsi-nolp-command = [
+					15 01 00 00 00 00 02 fe 80 /* Page select */
+					15 01 00 00 00 00 02 a0 03 /* APRC on */
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 11 00 02 53 20 /* Disable dimming, wait 17ms */
+					05 00 00 00 22 00 01 38    /* Exit idle, wait 34ms */
+					15 00 00 00 00 00 02 53 28 /* Enable dimming */
+					39 00 00 00 00 00 05 2A 00 28 01 B9 /* Column start addr */
+				];
+				qcom,mdss-dsi-hbm-on-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 00 00 02 66 02 /* Enter HBM */
+				];
+				qcom,mdss-dsi-hbm-off-command = [
+					15 00 00 00 00 00 02 fe 00 /* Page select */
+					15 00 00 00 00 00 02 66 00 /* Exit HBM */
+				];
+			};
+		};
+	};
+};

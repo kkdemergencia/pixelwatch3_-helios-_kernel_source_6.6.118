@@ -1,0 +1,15 @@
+#
+# PixArt PAT9xxx optical tracking sensor
+#
+
+config INPUT_PIXART_9XXX
+	tristate "PixArt PAT9xxx optical tracking sensor driver"
+	depends on INPUT && I2C && GPIOLIB
+	help
+	  Say Y to enable support for the PixArt PAT9xxx optical tracking
+	  sensor driver.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the module will be
+	  called pat9xxx.

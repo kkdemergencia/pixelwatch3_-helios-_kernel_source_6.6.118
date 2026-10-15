@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&qcom_memlat {
+	ddr {
+		silver-compute {
+			qcom,cpufreq-memfreq-tbl =
+				< 614400 547000 >,
+				< 864000 547000 >,
+				< 1363200 681000 >,
+				< 1900800 1353000 >;
+		};
+		silver {
+			qcom,cpufreq-memfreq-tbl =
+				< 614400 547000 >,
+				< 864000 547000 >,
+				< 1363200 1353000 >,
+				< 1900800 1804000 >;
+		};
+	};
+};
+
+&msm_gpu {
+	qcom,gpu-pwrlevels {
+		qcom,gpu-pwrlevel@0 {
+			qcom,gpu-freq = <1100000000>;
+		};
+	};
+};
+
+&gpucc {
+	enable-5150p-gpu-freq;
+};

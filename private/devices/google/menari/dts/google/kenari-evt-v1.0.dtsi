@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "../google-dts-base/sw5100-rt595.dtsi"
+#include "menari-common.dtsi"
+#include "kenari-battery.dtsi"
+#include "menari-nfc.dtsi"
+#include "menari-uwb.dtsi"
+#include "menari-crown-proto.dtsi"
+#include "menari-bt.dtsi"
+#include "kenari-wifi.dtsi"
+#include "menari-sdhc.dtsi"
+#include "menari-haptics.dtsi"
+#include "menari-audio.dtsi"
+#include "menari-wdc.dtsi"
+#include "menari-mcu-power.dtsi"
+
+&mcu {
+	board_type = "kenari_evt1";
+	main_image = "mcu_kenari_evt1_main.elf";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_kenari_evt1.bin";
+};
+
+&qupv3_se4_spi_clk_active {
+	config {
+		drive-strength = <10>;
+	};
+};

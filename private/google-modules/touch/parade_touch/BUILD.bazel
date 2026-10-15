@@ -1,0 +1,6 @@
+load("@kleaf//build/kernel/kleaf:kernel.bzl", "checkpatch")
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)

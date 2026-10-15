@@ -1,0 +1,81 @@
+#define BATTERY_PROFILE_COMMON_PROPERTIES                             \
+	/* COLD = 0 DegC, HOT = 46 DegC */                            \
+	qcom,jeita-hard-thresholds = <0x3257 0x1201>;                 \
+	/* LOW = 0.5°C, HIGH = 45.5°C */                              \
+	google,secondary-temp-interrupt-thresholds = <0x3209 0x1246>; \
+	/* termination current (in mA) in recharge */                 \
+	qcom,recharge-iterm-ma = <30>;                                \
+
+&sw5100_batterydata {
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id121
+	#include "qbg-profile-121-348.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id150
+	#include "qbg-profile-150.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id348
+	#include "qbg-profile-121-348.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id287
+	#include "qbg-profile-287-422.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id422
+	#include "qbg-profile-287-422.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id221
+	#include "qbg-profile-221-243.dtsi"
+
+	#define QBG_PROFILE_NAME qcom,qbg-battery-profile-id243
+	#include "qbg-profile-221-243.dtsi"
+};
+
+&sw5100_batterydata {
+	qcom,qbg-battery-profile-id121 {
+		qcom,battery-type = "121K_7497143_ATL";
+		qcom,batt-id-kohm = <121>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id150 {
+		qcom,battery-type = "150K_7552235_VDL";
+		qcom,batt-id-kohm = <150>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id348 {
+		qcom,battery-type = "348K_7497143_SVC_ATL";
+		qcom,batt-id-kohm = <348>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id287 {
+		qcom,battery-type = "287K_8370501_SVC_ATL";
+		qcom,batt-id-kohm = <287>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id422 {
+		qcom,battery-type = "422K_8370501_SVC_ATL";
+		qcom,batt-id-kohm = <422>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id221 {
+		qcom,battery-type = "221K_8370527_SVC_VDL";
+		qcom,batt-id-kohm = <221>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+
+	qcom,qbg-battery-profile-id243 {
+		qcom,battery-type = "243K_8370527_SVC_VDL";
+		qcom,batt-id-kohm = <243>;
+
+		BATTERY_PROFILE_COMMON_PROPERTIES
+	};
+};

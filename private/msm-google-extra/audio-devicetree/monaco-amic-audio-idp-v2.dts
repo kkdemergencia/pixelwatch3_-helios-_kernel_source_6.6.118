@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "monaco-audio.dtsi"
+#include "monaco-amic-audio.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. Monaco standalone IDP V2.0";
+	compatible = "qcom,monaco", "qcom,idp";
+	qcom,board-id = <0x020022 0x1>;
+};
+

@@ -1,0 +1,6 @@
+0x7d38901d	dhd_wlan_resources	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	
+0xc6fcd9f0	dhd_wlan_control	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	
+0x88654c24	dhd_wlan_power	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	
+0x322042cd	dhd_wlan_mem_prealloc	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	
+0x1759fd90	dhd_init_wlan_mem	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	
+0xb2c2bf82	dhd_exit_wlan_mem	/opt/wcd/work/workspace/WIFI_DHD_Build/BLAZAR_REL_101_10_591/build/dhd/android-t/vim3-gg/pcie@gg/bcmdhd/synadhd	EXPORT_SYMBOL	

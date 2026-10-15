@@ -1,0 +1,63 @@
+# Bazel file for fastrpc
+# Two modules to be exported - fastrpc, cdsp-loader
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+load(":define_modules.bzl", "define_modules")
+load("@kleaf//build/kernel/kleaf:kernel.bzl", "ddk_uapi_headers")
+
+define_modules("pineapple", "consolidate")
+
+define_modules("pineapple", "gki")
+
+define_modules("blair", "consolidate")
+
+define_modules("blair", "gki")
+
+define_modules("sun", "consolidate")
+
+define_modules("sun", "perf")
+
+define_modules("tuna", "consolidate")
+
+define_modules("tuna", "perf")
+
+define_modules("kera", "consolidate")
+
+define_modules("kera", "perf")
+
+define_modules("niobe", "consolidate")
+
+define_modules("niobe", "gki")
+
+define_modules("monaco", "consolidate")
+
+define_modules("monaco", "perf")
+
+define_modules("parrot", "consolidate")
+
+define_modules("parrot", "gki")
+
+filegroup(
+    name = "dsp_uapi_headers",
+    srcs = glob([
+        "include/uapi/misc/*.h",
+    ]),
+)
+
+ddk_uapi_headers(
+    name = "msm_dsp_uapi_headers",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    out = "msm-dsp-uapi-headers.tar.gz",
+    srcs = [
+        ":dsp_uapi_headers",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)

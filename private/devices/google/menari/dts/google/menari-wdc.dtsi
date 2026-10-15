@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/gpio/gpio.h>
+
+&tlmm {
+	wdc_link_status: wdc-link-status {
+		mux {
+			pins = "gpio39";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio39";
+			bias-pull-down;
+			input-enable;
+		};
+	};
+	wdc_enable: wdc-enable {
+		mux {
+			pins = "gpio55";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio55";
+			bias-disable;
+			output-low;
+		};
+	};
+};
+
+&soc {
+	google_wdc_controller: google,wdc-controller {
+		compatible = "google,extcon-shim";
+		google,connection-type = <CONN_CHG>;
+		google,supplier-connection-type = <CONN_CHG>;
+		/* Supplier extcon */
+		extcon = <&pm5100_charger>;
+	};
+
+	google_wdc: google,wdc {
+		compatible = "google,wdc";
+		google,wdc-vdd-supply = <&L17A>;
+		google,link-status-gpios = <&tlmm 39 0>;
+		google,enable-gpios = <&tlmm 55 GPIO_ACTIVE_LOW>;
+		google,start-enabled;
+		/*
+		 * Experimentally determined. USB PHY was forced off so that
+		 * debug cradle would loop cycling the link. Using the debug
+		 * prints in google-wdc.c#link_status_handler() it looks like
+		 * the time between a disconnect and reconnect is a little over
+		 * 7 seconds, which we'll round up to 8 seconds.
+		 * To ensure the USB PHY will remain on as the WDC link
+		 * cycles, set the link lost debounce to two cycles
+		 * (therefore 16s).
+		 */
+		google,link-lost-debounce-ms = <16000>;
+		/* Controller extcon. "extcon" is the standard DT prop name. */
+		extcon = <&google_wdc_controller>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&wdc_enable &wdc_link_status>;
+		status = "okay";
+	};
+};
+
+&google_extcon_usb_shim {
+	/* Supplier extcon */
+	extcon = <&google_wdc>;
+};
+
+&pm5100_charger {
+	/*
+	 * If the USB PHY is already on, and the device is plugged in, the
+	 * smblite module will cause the PHY to switch modes to support APSD.
+	 * This breaks the USB data connection if active.
+	 * Since we use the WDC link status as our trigger for the PHY anyways,
+	 * disable APSD.
+	 */
+	google,apsd-force-disabled;
+};
+
+&dwc3_phy0 {
+	snps,usb2-gadget-lpm-disable;
+};

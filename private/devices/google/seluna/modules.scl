@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""File containing information about kernel modules for Seluna."""
+
+SELUNA_VENDOR_KERNEL_BOOT_MODULES = [
+]
+
+SELUNA_VENDOR_KERNEL_BOOT_RECOVERY_MODULES = [
+    # keep sorted
+    "mcu_transport.ko",
+    "touch_nt383x0.ko",
+    "wear_touch_interface.ko",
+]
+
+SELUNA_VENDOR_DLKM_MODULES = [
+    # keep sorted
+    "cl_dsp-core.ko",
+    "cs40l26-core.ko",
+    "cs40l26-i2c.ko",
+    "i2c_arbitration_interface.ko",
+    "mcu_transport.ko",
+    "nitrous.ko",
+    "pat9xxx.ko",
+    "petc_input_filter.ko",
+    "snd-soc-cs40l26.ko",
+    "sr100.ko",
+    "synadhd4381.ko",
+    "touch_nt383x0.ko",
+    "wear_touch_interface.ko",
+]
+
+SELUNA_VENDOR_DLKM_BLOCKLIST_MODULES = [
+    # keep sorted
+    "synadhd4381.ko",
+]

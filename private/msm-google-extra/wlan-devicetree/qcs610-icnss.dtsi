@@ -1,0 +1,43 @@
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+&soc {
+	icnss: qcom,icnss@18800000 {
+		compatible = "qcom,icnss";
+		reg = <0x18800000 0x800000>,
+		      <0xb0000000 0x10000>;
+		reg-names = "membase", "smmu_iova_ipa";
+		iommus = <&apps_smmu 0x1640 0x1>;
+		interrupts = <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+			     <GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+			     <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+			     <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+			     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+			     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+			     <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+			     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+			     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+			     <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+			     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */ >,
+			     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */ >;
+
+		qcom,iommu-dma = "fastmap";
+		qcom,iommu-faults = "stall-disable", "HUPCF", "non-fatal";
+		qcom,iommu-dma-addr-pool = <0xa0000000 0x10000000>;
+		qcom,wlan-msa-fixed-region = <&wlan_msa_mem>;
+		qcom,wlan;
+
+		vdd-cx-mx-supply = <&pm6150_l9>;
+		vdd-1.8-xo-supply = <&pm6150l_l1>;
+		vdd-1.3-rfa-supply = <&pm6150l_l2>;
+		vdd-3.3-ch0-supply = <&pm6150l_l10>;
+		qcom,vdd-cx-mx-config = <640000 640000>;
+		qcom,is_low_power = <1>;
+		qcom,smp2p_map_wlan_1_in {
+			interrupts-extended = <&smp2p_wlan_1_in 0 0>,
+					      <&smp2p_wlan_1_in 1 0>;
+			interrupt-names = "qcom,smp2p-force-fatal-error",
+					  "qcom,smp2p-early-crash-ind";
+		};
+
+	};
+};

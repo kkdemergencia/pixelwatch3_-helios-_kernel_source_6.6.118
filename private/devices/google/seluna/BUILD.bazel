@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "kernel_dtstree",
+)
+load(
+    "//private/google-modules/soc/msm:bazel/pixel_watch_utils.bzl",
+    "sw5100_pixel_watch_dist",
+    "sw5100_pixel_watch_dtbo_image",
+)
+load(
+    ":dt_overlays.scl",
+    "SELUNA_OVERLAYS",
+)
+load(
+    ":modules.scl",
+    "SELUNA_VENDOR_DLKM_BLOCKLIST_MODULES",
+    "SELUNA_VENDOR_DLKM_MODULES",
+    "SELUNA_VENDOR_KERNEL_BOOT_MODULES",
+    "SELUNA_VENDOR_KERNEL_BOOT_RECOVERY_MODULES",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+kernel_dtstree(
+    name = "seluna.dt",
+    srcs = glob(
+        ["dts/**"],
+    ) + [
+        "//private/google-modules/soc/msm:sw5100.dt-bindings",
+    ],
+    makefile = "dts/Makefile",
+)
+
+sw5100_pixel_watch_dtbo_image(
+    name = "seluna_dtbo",
+    dtb_overlays = SELUNA_OVERLAYS,
+    dtstree = ":seluna.dt",
+)
+
+sw5100_pixel_watch_dist(
+    name = "sw5100_seluna_dist",
+    device_name = "seluna",
+    device_vendor_dlkm_blocklist = SELUNA_VENDOR_DLKM_BLOCKLIST_MODULES,
+    device_vendor_dlkm_modules = SELUNA_VENDOR_DLKM_MODULES,
+    device_vendor_kernel_boot_modules = SELUNA_VENDOR_KERNEL_BOOT_MODULES,
+    device_vendor_kernel_boot_recovery_modules = SELUNA_VENDOR_KERNEL_BOOT_RECOVERY_MODULES,
+    dtbo_image = ":seluna_dtbo",
+)

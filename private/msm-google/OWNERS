@@ -1,0 +1,6 @@
+file:/OWNERS_core
+per-file modules*monaco=set noparent
+per-file modules*monaco=file:kernel/private/google-modules/soc/msm:/OWNERS
+per-file monaco.bzl=set noparent
+per-file monaco.bzl=file:kernel/private/google-modules/soc/msm:/OWNERS
+

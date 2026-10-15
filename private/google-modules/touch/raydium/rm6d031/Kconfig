@@ -1,0 +1,13 @@
+#
+# Raydium RM6D031 touchscreen driver configuration
+#
+config TOUCHSCREEN_RM6D031
+	tristate "Raydium RM6D031"
+	default y
+	help
+	  Say Y here if you have a Raydium RM6D031 touchscreen connected
+	  to your system.
+
+	  If unsure, say N.
+
+	  If you would like to compile this driver as a module, say M.
