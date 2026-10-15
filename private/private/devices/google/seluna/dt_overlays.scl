@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Specifies the names of device-specific devicetree overlays."""
+
+SELUNA_OVERLAYS = [
+    "selene-nff-v2.0-overlay.dtbo",
+    "selene-nff-v2.1-overlay.dtbo",
+    "selene-proto-v1.0-overlay.dtbo",
+    "selene-proto-v1.1-overlay.dtbo",
+    "selene-evt-v1.0-overlay.dtbo",
+    "selene-evt-v1.5-overlay.dtbo",
+    "selene-dvt-v1.0-overlay.dtbo",
+    "luna-nff-v2.0-overlay.dtbo",
+    "luna-nff-v2.1-overlay.dtbo",
+    "luna-proto-v1.0-overlay.dtbo",
+    "luna-proto-v1.1-overlay.dtbo",
+    "luna-evt-v1.0-overlay.dtbo",
+    "luna-evt-v1.5-overlay.dtbo",
+    "luna-dvt-v1.0-overlay.dtbo",
+    "helios-nff-v2.0-overlay.dtbo",
+    "helios-nff-v2.1-overlay.dtbo",
+    "helios-proto-v1.0-overlay.dtbo",
+    "helios-proto-v1.1-overlay.dtbo",
+    "helios-evt-v1.0-overlay.dtbo",
+    "helios-evt-v1.5-overlay.dtbo",
+    "helios-dvt-v1.0-overlay.dtbo",
+    "sol-nff-v2.0-overlay.dtbo",
+    "sol-nff-v2.1-overlay.dtbo",
+    "sol-proto-v1.0-overlay.dtbo",
+    "sol-proto-v1.1-overlay.dtbo",
+    "sol-evt-v1.0-overlay.dtbo",
+    "sol-evt-v1.5-overlay.dtbo",
+    "sol-dvt-v1.0-overlay.dtbo",
+]

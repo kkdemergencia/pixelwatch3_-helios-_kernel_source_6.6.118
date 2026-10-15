@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (C) 2024 Google LLC
+
+build:disable_symbol_trimming --notrim
+build:disable_symbol_trimming --nokmi_symbol_list_strict_mode
+build:disable_symbol_trimming --nokmi_symbol_list_violations_check
+build:disable_symbol_trimming --config=build_gki
+
+build:pixel_debug_common --config=disable_symbol_trimming
+
+build:use_prebuilt_gki --//private/google-modules/soc/msm:gki_kernel_build=@gki_prebuilts//kernel_aarch64
+build:use_prebuilt_gki --//private/google-modules/soc/msm:gki_kernel_images=@gki_prebuilts//system_dlkm_staging_archive.tar.gz
+build:use_prebuilt_gki --//private/google-modules/soc/msm:gki_boot_img=@gki_prebuilts//kernel_aarch64:kernel_aarch64_signed_gki_artifacts
+
+build:build_gki --//private/google-modules/soc/msm:gki_kernel_build=@kleaf//common:kernel_aarch64
+build:build_gki --//private/google-modules/soc/msm:gki_kernel_images=@kleaf//common:kernel_aarch64_images
+build:build_gki --//private/google-modules/soc/msm:gki_boot_img=@kleaf//common:kernel_aarch64_gki_artifacts
+
+# Disable GKI prebuilts by default; build the GKI kernel from source.
+# Comment "build --config=use_prebuilt_gki" and
+# uncomment the line below to enable compiling the GKI kernel from source.
+#build --config=build_gki
+
+# Enable GKI prebuilts by default.
+# Comment "build --config=build_gki" and
+# uncomment the line below to enable GKI prebuilts usage.
+build --config=use_prebuilt_gki
+
+# disable symbol trimming, and consequently, GKI prebuilts by default
+#build --config=disable_symbol_trimming
+
+# This is required for the graphics external module, since it refers to
+# internal headers (e.g. header files under drivers/)
+#
+# TODO: This should be removed eventually, as modules should only be referring
+# to public headers. References to internal headers may suggest that those
+# headers should be made public, instead of internal.
+build --allow_ddk_unsafe_headers
+
+build:kasan_sw_tags_kcov --config=pixel_debug_common --defconfig_fragment=//private/google-modules/soc/msm:kasan_sw_tags_kcov_fragments
+build:kunit --config=pixel_debug_common --defconfig_fragment=//private/google-modules/soc/msm:kunit_fragment --//private/google-modules/soc/msm:enable_kunit
+
+build:mcu_transport_autobahn --//private/google-modules/soc/msm:mcu_transport=autobahn
+build:mcu_transport_autobahn_frame_1032b --//private/google-modules/soc/msm:mcu_transport=autobahn_frame_1032b
+build:mcu_transport_nanohub --//private/google-modules/soc/msm:mcu_transport=nanohub
+
+# Placeholders for device specific bazelrc files. Add as many as you need.
+try-import %workspace%/.d1.bazelrc
+try-import %workspace%/.d2.bazelrc
+try-import %workspace%/.d3.bazelrc
+try-import %workspace%/.d4.bazelrc
+try-import %workspace%/.d5.bazelrc
+
+# Only use bzlmod; do not support WORKSPACE.
+# Also enable support for starlark configuration language (.scl) files.
+common --noenable_workspace --experimental_enable_scl_dialect
+
+### GENERATED SECTION - DO NOT MODIFY - BEGIN ###
+common --registry=file://%workspace%/external/kleaf/external/bazelbuild-bazel-central-registry
+### GENERATED SECTION - DO NOT MODIFY - END ###

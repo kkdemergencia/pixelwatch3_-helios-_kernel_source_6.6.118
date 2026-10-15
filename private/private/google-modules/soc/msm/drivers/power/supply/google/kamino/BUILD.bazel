@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "ddk_module",
+)
+
+ddk_module(
+    name = "google-kamino",
+    srcs = [
+        "google-kamino.h",
+        "google-kamino-core.c",
+        "google-kamino-event-faker.c",
+        "google-kamino-event-faker.h",
+        "google-kamino-extcon.c",
+        "google-kamino-extcon.h",
+        "google-kamino-moisture-detect-mitigation.c",
+        "google-kamino-moisture-detect-mitigation.h",
+        "google-kamino-periodic-reauth.c",
+        "google-kamino-periodic-reauth.h",
+    ],
+    out = "google-kamino.ko",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/bms:misc-headers",
+        "//private/google-modules/bms/misc:gvotable",
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)

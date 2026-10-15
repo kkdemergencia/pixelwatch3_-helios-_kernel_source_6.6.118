@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "../google-dts-base/sw5100-rt595.dtsi"
+#include "../bt-devicetree/monaco-bt-standalone.dtsi"
+#include "../wlan-devicetree/monaco-standalone-cnss.dtsi"
+#include "../google-dts-base/sw5100-modem.dtsi"
+#include "../google-dts-base/sw5100-common-memory.dtsi"
+#include "../vendor/qcom/monaco-haptics-fifo-data.dtsi"
+
+#include "../google-dts-base/sw5100-nanohub.dtsi"
+#include "p11-sde-display.dtsi"
+#include "p11-touch.dtsi"
+#include "p11-nfc.dtsi"
+#include "../google-dts-base/sw5100-mcu.dtsi"
+#include "p11-haptics.dtsi"
+#include "p11-battery.dtsi"
+
+&aliases {
+	hsuart1 = "/soc/qcom,qupv3_0_geni_se@4ac0000/qcom,qup_uart_a@4a9c000";
+};
+
+&pm5100_gpios {
+	#gpio-cells = <2>;
+};
+
+&dsi_rm690c0_amoled_17_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_nolab_amoled>;
+	qcom,platform-reset-gpio = <&pm5100_gpios 2 0>;
+	qcom,platform-reset-gpio-always-on;
+};
+
+&pm5100_l21 {
+	regulator-always-on;
+	qcom,init-enable = <1>;
+};
+
+&sde_dsi {
+	qcom,dsi-default-panel = <&dsi_rm690c0_amoled_17_cmd>;
+};
+
+&sw5100_batterydata {
+	#include "qbg-battery-profile-p11-id56-ntc100-331mAh.dtsi"
+	#include "qbg-battery-profile-p11-id39-ntc100-337mAh.dtsi"
+};
+
+&pm5100_charger {
+	/* Workaround: Use pulldown on CHG_BST to avoid Vreg settle timeout. */
+	google,chg-bst-pulldown-wa;
+};
+
+&sensorhub {
+	sensorhub,firmware-download-enabled;
+};

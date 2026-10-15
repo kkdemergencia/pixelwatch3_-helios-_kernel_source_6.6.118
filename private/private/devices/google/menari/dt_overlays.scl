@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Specifies the names of device-specific devicetree overlays"""
+
+MENARI_OVERLAYS = [
+    "meridian_lte-nff-v2.0-overlay.dtbo",
+    "meridian_lte-nff-v2.0-wdc-overlay.dtbo",
+    "meridian_btwifi-nff-v2.0-overlay.dtbo",
+    "meridian_btwifi-nff-v2.0-wdc-overlay.dtbo",
+    "meridian_lte-proto-v1.0-overlay.dtbo",
+    "meridian_btwifi-proto-v1.0-overlay.dtbo",
+    "meridian_lte-proto-v2.0-overlay.dtbo",
+    "meridian_btwifi-proto-v2.0-overlay.dtbo",
+    "meridian_lte-evt-v1.0-overlay.dtbo",
+    "meridian_btwifi-evt-v1.0-overlay.dtbo",
+    "kenari_lte-nff-v1.0-overlay.dtbo",
+    "kenari_lte-nff-v1.0-wdc-overlay.dtbo",
+    "kenari_btwifi-nff-v1.0-overlay.dtbo",
+    "kenari_btwifi-nff-v1.0-wdc-overlay.dtbo",
+    "kenari_lte-nff-v2.0-overlay.dtbo",
+    "kenari_lte-nff-v2.0-wdc-overlay.dtbo",
+    "kenari_btwifi-nff-v2.0-overlay.dtbo",
+    "kenari_btwifi-nff-v2.0-wdc-overlay.dtbo",
+    "kenari_lte-proto-v1.0-overlay.dtbo",
+    "kenari_btwifi-proto-v1.0-overlay.dtbo",
+    "kenari_lte-proto-v2.0-overlay.dtbo",
+    "kenari_btwifi-proto-v2.0-overlay.dtbo",
+    "kenari_lte-evt-v1.0-overlay.dtbo",
+    "kenari_btwifi-evt-v1.0-overlay.dtbo",
+]

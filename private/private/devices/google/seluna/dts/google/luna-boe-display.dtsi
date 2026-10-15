@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/clock/qcom,dispcc-monaco.h>
+#include "dsi-panel-wj014sgm-amoled-cmd.dtsi"
+
+&dsi_wj014sgm_amoled_14_cmd {
+	qcom,ulps-enabled;
+	qcom,dsi-select-clocks = "pll_byte_clk0", "pll_dsi_clk0";
+	qcom,mdss-dsi-panel-status-check-mode = "te_signal_check";
+
+	qcom,mdss-dsi-t-clk-post = <0x09>;
+	qcom,mdss-dsi-t-clk-pre = <0x0F>;
+
+	qcom,mdss-dsi-display-timings {
+		timing@0 {
+			qcom,display-topology = <1 0 1>;
+			qcom,default-topology-index = <0>;
+
+			qcom,mdss-dsi-h-pulse-width = <56>;
+			qcom,mdss-dsi-v-pulse-width = <56>;
+			qcom,mdss-dsi-panel-phy-timings = [00 11 04 04 12 1E 04
+				04 03 02 04 00 0F 09];
+			qcom,mdss-dsi-panel-clockrate = <454671360>;
+		};
+	};
+};

@@ -1,0 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0
+#include "seluna-common.dtsi"
+#include "seluna-crown-p1.dtsi"
+#include "seluna-haptics-p1.dtsi"
+#include "seluna-audio-p1.dtsi"

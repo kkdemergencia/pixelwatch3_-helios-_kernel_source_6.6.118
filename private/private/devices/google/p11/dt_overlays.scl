@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Specifies the names of device-specific devicetree overlays."""
+
+P11_OVERLAYS = [
+    "p11-nff-v1.1-overlay.dtbo",
+    "p11-nff-v2.0-overlay.dtbo",
+    "p11-proto-v1.0-overlay.dtbo",
+    "p11-proto-v0.0-overlay.dtbo",
+    "p11-evt-v1.0-overlay.dtbo",
+    "p11-dvt-v1.0-overlay.dtbo",
+]

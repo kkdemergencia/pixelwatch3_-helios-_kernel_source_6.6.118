@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_headers",
+    "ddk_module",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+ddk_headers(
+    name = "common_headers",
+    hdrs = glob([
+        "*.h",
+    ]),
+    includes = ["."],
+)
+
+ddk_module(
+    name = "wear_touch_interface",
+    srcs = [
+        "wearable_touch_atom.c",
+        "wearable_touch_data_capturer.c",
+        "wearable_touch_interface.c",
+        "wearable_touch_interface_sysfs.c",
+        "wearable_touch_mcu_comms.c",
+        "wearable_touch_settings_synchronizer.c",
+    ],
+    out = "wear_touch_interface.ko",
+    hdrs = ["common_headers"],
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc:__subpackages__",
+        "//private/google-modules/touch:__subpackages__",
+    ],
+    deps = [
+        "//private/google-modules/input/offload/i2c-arbitration/mcu_transport",
+        "//private/msm-google:all_headers",
+    ],
+)

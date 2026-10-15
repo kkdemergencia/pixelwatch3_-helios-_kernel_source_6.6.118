@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "menari-adsp-bt-lpi_i2s3.dtsi"
+
+&lpi_tlmm {
+	cdc_dmic45_clk_active: dmic45_clk_active {
+		mux {
+			pins = "gpio12";
+			function = "func1";
+		};
+
+		config {
+			pins = "gpio12";
+			drive-strength = <8>;
+			output-high;
+		};
+	};
+
+	cdc_dmic45_clk_sleep: dmic45_clk_sleep {
+		mux {
+			pins = "gpio12";
+			function = "func1";
+		};
+
+		config {
+			pins = "gpio12";
+			drive-strength = <2>;
+			bias-disable;
+			output-low;
+		};
+	};
+
+	cdc_dmic45_data_active: dmic45_data_active {
+		mux {
+			pins = "gpio13";
+			function = "func1";
+		};
+
+		config {
+			pins = "gpio13";
+			drive-strength = <8>;
+			input-enable;
+		};
+	};
+
+	cdc_dmic45_data_sleep: dmic45_data_sleep {
+		mux {
+			pins = "gpio13";
+			function = "func1";
+		};
+
+		config {
+			pins = "gpio13";
+			drive-strength = <2>;
+			pull-down;
+			input-enable;
+		};
+	};
+};
+
+&spf_core_platform {
+	cdc_dmic45_gpios: cdc_dmic45_pinctrl {
+		compatible = "qcom,msm-cdc-pinctrl";
+		pinctrl-names = "aud_active", "aud_sleep";
+		pinctrl-0 = <&cdc_dmic45_clk_active &cdc_dmic45_data_active>;
+		pinctrl-1 = <&cdc_dmic45_clk_sleep &cdc_dmic45_data_sleep>;
+		qcom,lpi-gpios;
+		#gpio-cells = <0>;
+	};
+};
+
+&besbev_codec {
+	qcom,visense-support = <1>;
+};
+
+&monaco_snd {
+	qcom,wcn-btfm = <0>;
+
+	qcom,audio-routing =
+		"TX DMIC0", "Digital Mic0",
+		"Digital Mic0", "MIC BIAS1",
+		"TX DMIC1", "Digital Mic1",
+		"Digital Mic1", "MIC BIAS1",
+		"TX DMIC2", "Digital Mic2",
+		"Digital Mic2", "MIC BIAS2",
+		"TX DMIC3", "Digital Mic3",
+		"Digital Mic3", "MIC BIAS2",
+		"TX DMIC4", "Digital Mic4",
+		"Digital Mic4", "MIC BIAS1",
+		"TX DMIC5", "Digital Mic5",
+		"Digital Mic5", "MIC BIAS1",
+		"SPKR_IN", "AUX_OUT",
+		"TX SWR_INPUT", "VA_TX_SWR_CLK",
+		"RX_SWR_TX_PCM_IN0", "RX_MCLK",
+		"RX_SWR_TX_PCM_IN1", "RX_MCLK",
+		"RX_TX DEC0_INP", "TX DEC0 MUX",
+		"RX_TX DEC1_INP", "TX DEC1 MUX",
+		"RX_TX DEC2_INP", "TX DEC2 MUX",
+		"RX_TX DEC3_INP", "TX DEC3 MUX",
+		"TX_AIF1 CAP", "VA_TX_SWR_CLK",
+		"TX_AIF2 CAP", "VA_TX_SWR_CLK",
+		"TX_AIF3 CAP", "VA_TX_SWR_CLK",
+		"VA SWR_INPUT", "VA_SWR_CLK",
+		"VA_AIF1 CAP", "VA_SWR_CLK",
+		"VA_AIF2 CAP", "VA_SWR_CLK",
+		"VA_AIF3 CAP", "VA_SWR_CLK",
+		"VA DMIC0", "Digital Mic0",
+		"VA DMIC1", "Digital Mic1",
+		"VA DMIC2", "Digital Mic2",
+		"VA DMIC3", "Digital Mic3",
+		"VA DMIC0", "VA MIC BIAS1",
+		"VA DMIC1", "VA MIC BIAS1",
+		"VA DMIC2", "VA MIC BIAS2",
+		"VA DMIC3", "VA MIC BIAS2";
+
+	qcom,cdc-dmic45-gpios = <&cdc_dmic45_gpios>;
+};

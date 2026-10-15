@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_headers",
+    "ddk_module",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+ddk_headers(
+    name = "common_headers",
+    hdrs = glob([
+        "*.h",
+    ]),
+    includes = ["."],
+)
+
+ddk_module(
+    name = "mcu_transport",
+    srcs = [
+        "mcu_transport_interface.c",
+    ],
+    out = "mcu_transport.ko",
+    hdrs = ["common_headers"],
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/input/offload/i2c-arbitration:__pkg__",
+        "//private/google-modules/rotary-encoders:__subpackages__",
+        "//private/google-modules/soc:__subpackages__",
+        "//private/google-modules/touch:__subpackages__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "mcu_transport_autobahn",
+    srcs = [
+        "mcu_transport_autobahn.c",
+    ],
+    out = "mcu_transport_autobahn.ko",
+    hdrs = ["common_headers"],
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc:__subpackages__",
+    ],
+    deps = [
+        ":mcu_transport",
+        "//private/google-modules/soc/msm:mcu_transport_header",
+        "//private/google-modules/wac/autobahn",
+        "//private/msm-google:all_headers",
+    ],
+)

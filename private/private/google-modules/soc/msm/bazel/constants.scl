@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Utility files for storing constants for Pixel Watch kernel builds."""
+
+KERNEL_DIR = "private/msm-google"
+SOC_NAME = "monaco"
+
+SW5100_DTBS = [
+    # keep sorted
+    "sw5100.dtb",
+    "sw5100-btwifi.dtb",
+]
+
+SW5100_EXTERNAL_MODULES_TARGETS = [
+    # keep sorted
+    "//private/google-modules/amplifiers/cs40l26",
+    "//private/google-modules/bluetooth/broadcom",
+    "//private/google-modules/bms",
+    "//private/google-modules/bms/misc:bms-misc",
+    "//private/google-modules/display/watch/mcu-offload/mcu_display",
+    "//private/google-modules/input/offload/i2c-arbitration:i2c_arbitration_interface",
+    "//private/google-modules/input/offload/i2c-arbitration:i2c_arbitration_module_autobahn",
+    "//private/google-modules/input/offload/i2c-arbitration/mcu_transport:mcu_transport",
+    "//private/google-modules/input/offload/i2c-arbitration/mcu_transport:mcu_transport_autobahn",
+    "//private/google-modules/nanohub",
+    "//private/google-modules/nfc/nxp/snxxx:nfc_modules",
+    "//private/google-modules/rotary-encoders/pat9xxx",
+    "//private/google-modules/rotary-encoders/petc_input_filter",
+    "//private/google-modules/soc/msm/debug_kinfo",
+    "//private/google-modules/soc/msm/drivers/extcon/google:extcon-shim",
+    "//private/google-modules/soc/msm/drivers/gpio-cdev-wake:gpio-cdev-wake",
+    "//private/google-modules/soc/msm/drivers/power/supply/google:google-smblite-hvdcp",
+    "//private/google-modules/soc/msm/drivers/power/supply/google/kamino:google-kamino",
+    "//private/google-modules/soc/msm/drivers/power/supply/qcom:qcom_battery_modules",
+    "//private/google-modules/soc/msm/drivers/soc/qcom/modemsmem",
+    "//private/google-modules/soc/msm/drivers/usb/google/wdc:google_wdc",
+    "//private/google-modules/soc/msm/restart_debug",
+    "//private/google-modules/soc/msm/wlan_mac",
+    "//private/google-modules/sound/mcu_mic_codec",
+    "//private/google-modules/touch/common:wear_touch_interface",
+    "//private/google-modules/touch/novatek/nt383x0:touch_nt383x0",
+    "//private/google-modules/touch/parade_touch/tma525c",
+    "//private/google-modules/touch/raydium/rm6d031:touch_rm6d031",
+    "//private/google-modules/uwb/nxp/sr100",
+    "//private/google-modules/uwb/nxp/sr200",
+    "//private/google-modules/wac/autobahn",
+    "//private/google-modules/wac/autobahn:autobahn_frame_1032b",
+    "//private/google-modules/wlan/syna/dhd4381",
+    "//private/msm-google-modules/audio:monaco_perf_modules",
+    "//private/msm-google-modules/bt:monaco_perf_modules",
+    "//private/msm-google-modules/dataipa:monaco_perf_modules",
+    "//private/msm-google-modules/datarmnet:monaco_perf_modules",
+    "//private/msm-google-modules/datarmnet-ext/mem:monaco_perf_rmnet_mem",
+    "//private/msm-google-modules/datarmnet-ext/wlan:monaco_perf_wlan",
+    "//private/msm-google-modules/display:monaco_perf_display_drivers",
+    "//private/msm-google-modules/dsp:monaco_perf_frpc-adsprpc",
+    "//private/msm-google-modules/graphics:monaco_perf_msm_kgsl",
+    "//private/msm-google-modules/mm/msm_ext_display:monaco_perf_msm_ext_display",
+    "//private/msm-google-modules/mm/sync_fence:monaco_perf_sync_fence",
+    "//private/msm-google-modules/securemsm:monaco_perf_modules",
+    "//private/msm-google-modules/video:monaco_perf_video_modules",
+    "//private/msm-google-modules/wlan/platform:monaco_perf_modules",
+    "//private/msm-google-modules/wlan/qcacld-3.0:monaco_perf_qca_cld_wlan",
+]
+
+SW5100_EXTERNAL_MODULES_DDK_UAPI_HEADERS = [
+    # keep sorted
+    "//private/msm-google-modules/audio:msm_audio_uapi_headers",
+    "//private/msm-google-modules/dataipa:msm_dataipa_uapi_headers",
+    "//private/msm-google-modules/display:msm_display_uapi_headers",
+    "//private/msm-google-modules/dsp:msm_dsp_uapi_headers",
+    "//private/msm-google-modules/securemsm:msm_securemsm_uapi_headers",
+    "//private/msm-google-modules/video:msm_video_uapi_headers",
+]

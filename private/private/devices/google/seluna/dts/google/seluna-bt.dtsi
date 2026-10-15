@@ -1,0 +1,177 @@
+// SPDX-License-Identifier: GPL-2.0
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+&tlmm {
+	bt_pins {
+		bt_reg_on: bt-reg-on {
+			mux {
+				pins = "gpio94";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio94";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		bt_dev_wake: bt-dev-wake {
+			mux {
+				pins = "gpio108";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio108";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		bt_host_wake: bt-host-wake {
+			mux {
+				pins = "gpio25";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio25";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		bt_time_sync: bt-time-sync {
+			mux {
+				pins = "gpio82";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio82";
+				input-enable;
+				bias-disable;
+			};
+		};
+		bt_reg_on_quiescence: bt-reg-on-quiescence {
+			mux {
+				pins = "gpio94";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio94";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		bt_dev_wake_quiescence: bt-dev-wake-quiescence {
+			mux {
+				pins = "gpio108";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio108";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		bt_host_wake_quiescence: bt-host-wake-quiescence {
+			mux {
+				pins = "gpio25";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio25";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		qupv3_se5_cts_quiescence: qupv3-se5-cts-quiescence {
+			mux {
+				pins = "gpio26";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio26";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		qupv3_se5_rts_quiescence: qupv3-se5-rts-quiescence {
+			mux {
+				pins = "gpio27";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio27";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		qupv3_se5_tx_quiescence: qupv3-se5-tx-quiescence {
+			mux {
+				pins = "gpio28";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio28";
+				input-enable;
+				bias-disable;
+			};
+		};
+
+		qupv3_se5_rx_quiescence: qupv3-se5-rx-quiescence {
+			mux {
+				pins = "gpio29";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio29";
+				input-enable;
+				bias-disable;
+			};
+		};
+		qupv3_se5_socbt_rts: qupv3_se5_socbt_rts {
+			mux {
+				pins = "gpio27";
+				function = "qup05";
+			};
+			config {
+				pins = "gpio27";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+};
+
+&soc {
+	rfkill {
+		compatible = "brcm,rfkill";
+		gpios = <&tlmm 94 0     /* BT_REG_ON */ >;
+		pinctrl-names = "default";
+		pinctrl-0 = <&bt_reg_on>;
+	};
+	btbcm: btbcm {
+		compatible = "goog,nitrous";
+		pinctrl-0 = <&bt_reg_on &bt_dev_wake &bt_host_wake &bt_time_sync>;
+		pinctrl-1 = <&bt_reg_on_quiescence &bt_dev_wake_quiescence &bt_host_wake_quiescence>;
+		pinctrl-names = "default", "quiescence";
+		power-gpios = <&tlmm 94 0>;
+		host-wakeup-gpios = <&tlmm 25 0>;
+		device-wakeup-gpios = <&tlmm 108 0>;
+		timesync-gpios = <&tlmm 82 0>;
+		wake-polarity = <1>; /* 0 - active low, 1 - active high */
+		status = "okay";
+	};
+};
+
+&qupv3_se5_4uart {
+	interrupts-extended = <&intc GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+	pinctrl-0 = <&qupv3_se5_cts_quiescence &qupv3_se5_rts_quiescence &qupv3_se5_tx_quiescence &qupv3_se5_rx_quiescence>;
+	pinctrl-1 = <&qupv3_se5_cts>, <&qupv3_se5_socbt_rts>, <&qupv3_se5_tx>, <&qupv3_se5_rx>;
+	pinctrl-2 = <&qupv3_se5_cts_quiescence &qupv3_se5_rts_quiescence &qupv3_se5_tx_quiescence &qupv3_se5_rx_quiescence>;
+	pinctrl-3 = <&qupv3_se5_cts_quiescence &qupv3_se5_rts_quiescence &qupv3_se5_tx_quiescence &qupv3_se5_rx_quiescence>;
+	qcom,wakeup-byte = <0x0>;
+	status = "ok";
+};

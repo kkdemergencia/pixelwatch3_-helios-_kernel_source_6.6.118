@@ -1,0 +1,54 @@
+
+&sw5100_batterydata {
+	#include "qbg-battery-profile-luna-id39.dtsi"
+	#include "qbg-battery-profile-luna-id56.dtsi"
+};
+
+&google_battery {
+		google,chg-battery-capacity = <420>;
+
+		/* charge table - FL22 ESR Rev 7 */
+		google,chg-temp-limits = <0 100 200 420 460>;
+		google,chg-cv-limits = <
+					4200000 4350000 4480000
+					>;
+		/* units are C rate in percent */
+		google,chg-cc-limits = <
+			48 24 24			// 200mA 100mA
+			66 24 24			// 275mA 100mA
+			120 120 48			// 500mA 200mA
+			96 96 48			// 400mA 200mA
+		>;
+
+		/* Time to full (TTF) */
+		google,ttf-temp-idx= <2>;
+		google,ttf-adapter = <2600>;
+		google,ttf-soc-table =  <78 86 96 100>;
+		google,ttf-elap-table = <32 56 84 92>;
+		google,ttf-tier-table = <0 84 90>;
+		/* TTF ref table is sized max(chg-battery-capacity, fg-learned-capacity) */
+		google,ttf-use-fg-capacity;
+};
+
+&google_charger {
+		google,thermal-mitigation = <4000000 3500000 3000000
+						2500000 2000000 1500000
+						1000000 500000>;
+		//google,thermal-pd-wa;
+		google,fv-max-uv = <4480000>;
+		google,chg-termination-5v;
+};
+
+&google_bms {
+	google,soc_shutdown_offset = <3>;
+};
+
+&pm5100_charger {
+	qcom,fv-max-uv = <4480000>;
+	qcom,usb-icl-ua = <600000>;
+	qcom,fcc-max-ua = <500000>;
+};
+
+&pm5100_qbg {
+	qcom,iterm-ma = <20>;
+};

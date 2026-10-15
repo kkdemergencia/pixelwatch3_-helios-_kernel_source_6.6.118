@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_headers",
+    "ddk_module",
+)
+load("//private/google-modules/soc/msm:bazel/constants.scl", "SOC_NAME")
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+ddk_headers(
+    name = "common_headers",
+    hdrs = glob([
+        "*.h",
+    ]),
+    includes = ["."],
+)
+
+ddk_module(
+    name = "i2c_arbitration_interface",
+    srcs = [
+        "i2c_arbitration_interface.c",
+    ],
+    out = "i2c_arbitration_interface.ko",
+    hdrs = ["common_headers"],
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/rotary-encoders:__subpackages__",
+        "//private/google-modules/soc:__subpackages__",
+        "//private/google-modules/touch:__subpackages__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers",
+    ],
+)
+
+ddk_module(
+    name = "i2c_arbitration_module_autobahn",
+    srcs = [
+        "i2c_arbitration_device_tree.c",
+        "i2c_arbitration_mcu_autobahn_impl.c",
+        "i2c_arbitration_module.c",
+    ],
+    out = "i2c_arbitration_module_autobahn.ko",
+    hdrs = ["common_headers"],
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/rotary-encoders:__subpackages__",
+        "//private/google-modules/soc:__subpackages__",
+        "//private/google-modules/touch:__subpackages__",
+    ],
+    deps = [
+        ":i2c_arbitration_interface",
+        "//private/google-modules/input/offload/i2c-arbitration/mcu_transport",
+        "//private/msm-google:all_headers",
+        "//private/msm-google:{}_perf/drivers/soc/qcom/panel_event_notifier".format(SOC_NAME),
+    ],
+)

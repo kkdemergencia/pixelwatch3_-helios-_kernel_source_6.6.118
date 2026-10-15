@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "p11-evt-v1.0.dtsi"
+
+&usb2_phy0 {
+	qcom,param-override-seq =
+		<0x63 0x6c	/* override_x0 */
+		 0xCF 0x70	/* override_x1: monaco default: 0xC8 0x70 */
+		 0x33 0x74>;	/* override x2: monaco default: 0x17 0x74 */
+};

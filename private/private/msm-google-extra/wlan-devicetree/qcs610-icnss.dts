@@ -1,0 +1,11 @@
+/dts-v1/;
+/plugin/;
+
+#include "qcs610-icnss.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. QCS610 SoC";
+	compatible = "qcom,qcs610", "qcom,qcs610-iot", "qcom,iot";
+	qcom,msm-id = <401 0x0>;
+	qcom,board-id = <0 0>;
+};

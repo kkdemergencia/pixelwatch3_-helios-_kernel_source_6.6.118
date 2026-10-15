@@ -1,0 +1,97 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&qupv3_se3_spi {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	status = "ok";
+	pinctrl-1 = <&qupv3_se3_spi_sleep>, <&qupv3_se3_spi_cs_sleep>;
+	srxxx@0 {
+		compatible = "nxp,srxxx";
+		status = "ok";
+		reg = <0>;
+		spi-max-frequency = <16000000>;
+		nxp,sr1xx-irq = <&tlmm 56 0x00>;
+		nxp,sr1xx-ce = <&tlmm 38 0x00>;
+		nxp,sr1xx-ri = <&tlmm 37 0x00>;
+		nxp,sr1xx-dig-supply = <&L17A>;
+		nxp,sr1xx-rf-supply = <&L16A>;
+		pinctrl-names = "default", "sleep";
+		pinctrl-0  = <&uwb_gpio_in_active &uwb_gpio_out_active>;
+		pinctrl-1  = <&uwb_gpio_in_sleep &uwb_gpio_out_sleep>;
+		clocks = <&rpmcc RPM_SMD_CXO_D0>;
+		clock-names = "slow";
+	};
+};
+
+&qupv3_se3_spi_sleep {
+	mux {
+		pins = "gpio14", "gpio15", "gpio16";
+	};
+
+	config {
+		pins = "gpio14", "gpio15", "gpio16";
+	};
+};
+
+&qupv3_se3_spi_pins {
+	qupv3_se3_spi_cs_sleep: qupv3_se3_spi_cs_sleep {
+		mux {
+			pins = "gpio17";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio17";
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+	};
+};
+
+&tlmm {
+	uwb_pins {
+		uwb_gpio_out_active: uwb-gpio-out-active {
+			mux {
+				pins = "gpio37", "gpio38";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio37", "gpio38";
+				drive-strength = <6>;
+				bias-disable;
+			};
+		};
+		uwb_gpio_out_sleep: uwb-gpio-out-sleep {
+			mux {
+				pins = "gpio37", "gpio38";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio37", "gpio38";
+				bias-pull-down;
+			};
+		};
+		uwb_gpio_in_active: uwb-gpio-in-active {
+			mux {
+				pins = "gpio56";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio56";
+				bias-disable;
+				input-enable;
+			};
+		};
+		uwb_gpio_in_sleep: uwb-gpio-in-sleep {
+			mux {
+				pins = "gpio56";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio56";
+				bias-pull-down;
+			};
+		};
+	};
+};

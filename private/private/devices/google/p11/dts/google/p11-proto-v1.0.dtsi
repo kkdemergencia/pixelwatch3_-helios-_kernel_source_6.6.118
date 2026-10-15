@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "p11-proto-v0.0.dtsi"
+
+&dsi_rm690c0_amoled_17_cmd {
+	/delete-property/qcom,platform-reset-gpio-always-on;
+};
+
+&pmx_sde {
+	sde_dsi_suspend_pv1_0: sde_dsi_suspend_pv1_0 {
+		pinconf {
+			pins = "gpio1";
+			function = "normal";
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+			bias-disable;
+			output-high;
+		};
+	};
+};
+
+&sde_dsi {
+	pinctrl-1 = <&sde_dsi_suspend_pv1_0 &sde_te_suspend>;
+};

@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "../google-dts-base/sw5100-rt595.dtsi"
+#include "menari-common.dtsi"
+#include "kenari-battery.dtsi"
+#include "menari-nfc.dtsi"
+#include "menari-uwb.dtsi"
+#include "menari-crown-proto.dtsi"
+#include "menari-bt.dtsi"
+#include "kenari-wifi.dtsi"
+#include "menari-sdhc.dtsi"
+#include "menari-haptics.dtsi"
+#include "menari-audio.dtsi"
+#include "menari-wdc.dtsi"
+
+&mcu {
+	board_type = "kenari_p1";
+	main_image = "mcu_kenari_p1_main.elf";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_kenari_p1.bin";
+	/delete-property/ sensorhub,blstatus-gpio;
+	sensorhub,vddh3-voltage = <1304000 1304000>;
+	sensorhub,spi_driver_impl = <AMBIQ_HD>;
+	spi-max-frequency = <8000000>;
+
+	pinctrl-0 = <&sensorhub_nreset &sensorhub_pmic_irq &sensorhub_boot0
+	             &sensorhub_boot2 &sensorhub_wakeup &sensorhub_irq1>;
+};
+
+&google_kamino {
+	google,charge-on-invalid-charger;
+};

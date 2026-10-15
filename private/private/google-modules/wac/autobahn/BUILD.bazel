@@ -1,0 +1,289 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "checkpatch",
+    "ddk_headers",
+    "ddk_module",
+)
+load(
+    "@rules_pkg//pkg:install.bzl",
+    "pkg_install",
+)
+load(
+    "@rules_pkg//pkg:mappings.bzl",
+    "pkg_files",
+    "strip_prefix",
+)
+
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "@kleaf//common:scripts/checkpatch.pl",
+)
+
+filegroup(
+    name = "autobahn.kconfig",
+    srcs = [
+        "Kconfig",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)
+
+# Local headers needed to compile the autobahn and its kunit test modules
+ddk_headers(
+    name = "local_headers",
+    hdrs = glob(
+        [
+            "core/**/*.h",
+            "*.h",
+        ],
+        exclude = [
+            "core/mac/public/autobahn/mac/responder.h",
+        ],
+    ),
+    includes = [
+        ".",
+        "core/assert/public",
+        "core/llc/public",
+        "core/log/public",
+        "core/mac/public",
+        "core/platform/linux/assert/public",
+        "core/platform/linux/atomic/public",
+        "core/platform/linux/log/public",
+        "core/platform/linux/mutex/public",
+        "core/platform/linux/public",
+        "core/platform/linux/thread_notification/public",
+        "core/platform/linux/timer/public",
+        "core/preprocessor/public",
+        "core/public",
+        "core/sync/public",
+    ],
+)
+
+autobahn_srcs = glob(
+    [
+        "core/**/*.c",
+        "*.c",
+    ],
+    exclude = [
+        "core/mac/responder.c",
+        "core/platform/linux/transport/transport_fault_inject.c",
+    ],
+)
+
+autobahn_conditional_srcs = {
+    "CONFIG_AUTOBAHN_FAULT_INJECTION": {
+        True: [
+            "core/platform/linux/transport/transport_fault_inject.c",
+        ],
+    },
+}
+
+autobahn_local_defines = [
+    "DYNAMIC_DEBUG_MODULE",
+    "ABN_CONFIG_OVERRIDES_HEADER=\"autobahn/autobahn_config.h\"",
+]
+
+autobahn_deps = [
+    ":local_headers",
+    "//private/msm-google:all_headers",
+]
+
+# Autobahn module built along with the device/SOC distribution
+ddk_module(
+    name = "autobahn_frame_264b",
+    srcs = autobahn_srcs,
+    out = "autobahn.ko",
+    hdrs = ["//private/google-modules/soc/msm:mcu_transport_header"],
+    conditional_srcs = autobahn_conditional_srcs,
+    defconfig = "configs/frame_264b_defconfig",
+    kconfig = ":autobahn.kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = autobahn_local_defines,
+    deps = autobahn_deps,
+)
+
+# Autobahn module built along with the device/SOC distribution
+ddk_module(
+    name = "autobahn_frame_1032b",
+    srcs = autobahn_srcs,
+    out = "autobahn_frame_1032b.ko",
+    hdrs = ["//private/google-modules/soc/msm:mcu_transport_header"],
+    conditional_srcs = autobahn_conditional_srcs,
+    defconfig = "configs/frame_1032b_defconfig",
+    kconfig = ":autobahn.kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = autobahn_local_defines,
+    visibility = [
+        "//private/google-modules:__subpackages__",
+    ],
+    deps = autobahn_deps,
+)
+
+alias(
+    name = "autobahn",
+    actual = ":autobahn_frame_264b",  # This builds only one kernel object
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+############################### KUnit Tests ##################################
+
+# "abn_msg_queue" KUnit tests module
+ddk_module(
+    name = "abn_msg_queue_tests",
+    srcs = [
+        "abn_msg_queue.c",
+        "tests/test_abn_msg_queue.c",
+    ],
+    out = "abn_msg_queue_tests.ko",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "abn_nanohub_adapter" KUnit tests module
+ddk_module(
+    name = "abn_nanohub_adapter_tests",
+    srcs = [
+        "abn_msg_queue.c",
+        "nanohub_adapter.c",
+        "tests/test_nanohub_adapter.c",
+    ],
+    out = "abn_nanohub_adapter_tests.ko",
+    hdrs = ["//private/google-modules/soc/msm:mcu_transport_header"],
+    defconfig = "tests/kunit_defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    local_defines = ["queue_work_on=mock_queue_work_on"],
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "abn_signal_in" KUnit tests module
+ddk_module(
+    name = "abn_signal_in_tests",
+    srcs = [
+        "core/platform/linux/signal_in/signal_in.c",
+        "tests/test_signal_in.c",
+    ],
+    out = "abn_signal_in_tests.ko",
+    defconfig = "tests/kunit_defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "abn_signal_out" KUnit tests module
+ddk_module(
+    name = "abn_signal_out_tests",
+    srcs = [
+        "core/platform/linux/signal_out/signal_out.c",
+        "tests/test_signal_out.c",
+    ],
+    out = "abn_signal_out_tests.ko",
+    defconfig = "tests/kunit_defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "abn_thread_notif_interf" KUnit tests module
+ddk_module(
+    name = "abn_thread_notif_interf_tests",
+    srcs = [
+        "core/platform/linux/thread_notification/thread_notification.c",
+        "tests/test_abn_thread_notif_interf.c",
+    ],
+    out = "abn_thread_notif_interf_tests.ko",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "abn_timer_interf" KUnit tests module
+ddk_module(
+    name = "abn_timer_interf_tests",
+    srcs = [
+        "core/platform/linux/timer/timer.c",
+        "tests/test_abn_timer_interf.c",
+    ],
+    out = "abn_timer_interf_tests.ko",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# "autobahn_transport" KUnit tests module
+ddk_module(
+    name = "autobahn_fd_spi_transport_tests",
+    srcs = [
+        "core/platform/linux/transport/fd_spi.c",
+        "tests/test_fd_spi_transport.c",
+    ],
+    out = "autobahn_fd_spi_transport_tests.ko",
+    defconfig = "tests/kunit_defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+# Autobahn checksum KUnit tests module
+ddk_module(
+    name = "autobahn_checksum_tests",
+    srcs = [
+        "core/platform/linux/checksum/checksum.c",
+        "tests/test_checksum.c",
+    ],
+    out = "abn_checksum_tests.ko",
+    defconfig = "tests/kunit_defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:gki_kernel_build",
+    deps = [
+        ":local_headers",
+        "@kleaf//common:all_headers",
+    ],
+)
+
+pkg_files(
+    name = "abn_kunit_tests_pkg_files",
+    srcs = [
+        ":abn_msg_queue_tests",
+        ":abn_nanohub_adapter_tests",
+        ":abn_signal_in_tests",
+        ":abn_signal_out_tests",
+        ":abn_thread_notif_interf_tests",
+        ":abn_timer_interf_tests",
+        ":autobahn_checksum_tests",
+        ":autobahn_fd_spi_transport_tests",
+    ],
+    strip_prefix = strip_prefix.files_only(),
+)
+
+pkg_install(
+    name = "abn_kunit_tests_dist",
+    srcs = [":abn_kunit_tests_pkg_files"],
+    destdir = "out/abn_kunit",
+)

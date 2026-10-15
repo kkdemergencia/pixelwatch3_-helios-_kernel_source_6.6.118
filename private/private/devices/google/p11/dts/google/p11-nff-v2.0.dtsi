@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "p11-common.dtsi"
+
+&mcu {
+	board_type = "p11_nff2";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_p11_nff2.bin";
+};
+
+&pm5100_l20 {
+	regulator-always-on;
+	qcom,init-enable = <1>;
+};
+
+&sde_dsi {
+	pinctrl-0 = <&sde_dsi_pv0_0 &sde_te_active>;
+	pinctrl-1 = <&sde_dsi_suspend_pv1_0 &sde_te_suspend>;
+};
+
+&pmx_sde {
+	sde_dsi_pv0_0: sde_dsi_pv0_0 {
+		pinconf {
+			pins = "gpio1", "gpio2";
+			function = "normal";
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+			bias-disable;
+			output-high;
+		};
+	};
+	sde_dsi_suspend_pv1_0: sde_dsi_suspend_pv1_0 {
+		pinconf {
+			pins = "gpio1";
+			function = "normal";
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+			bias-disable;
+			output-high;
+		};
+	};
+};
+
+&pm5100_charger {
+	/* SDP 500mA mode for float chargers */
+	qcom,float-option = <2>;
+
+	/* Enable HVDCP3 (QC3) charger detection */
+	google,hvdcp3-detect-en;
+};
+
+&pm5100_qbg {
+	qcom,iterm-ma = <20>;
+};
+
+&google_hvdcp {
+	status = "okay";
+};

@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include "../google-dts-base/sw5100-rt595.dtsi"
+#include "seluna-common-proto-v1.1.dtsi"
+#include "luna-battery.dtsi"
+#include "../google-dts-base/sw5100-mcu.dtsi"
+#include "seluna-wifi.dtsi"
+
+&mcu {
+	board_type = "luna_p1_1";
+};
+
+&sensorhub {
+	sensorhub,firmware = "mcu_luna_p1_1.bin";
+};

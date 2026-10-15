@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
+
+/dts-v1/;
+/plugin/;
+
+#include "kenari-nff-v2.0-wdc.dtsi"
+
+/ {
+	model = "Google Kenari LTE NFF 2.0 (WDC)";
+	qcom,board-id = <0x010022 0x1>;
+	board_id = <0x020f01>;
+	board_rev = <0x020001>;
+};

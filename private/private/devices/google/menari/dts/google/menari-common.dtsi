@@ -1,0 +1,208 @@
+// SPDX-License-Identifier: GPL-2.0
+#include <dt-bindings/extcon/google,extcon-shim.h>
+#include <dt-bindings/nanohub/google,nanohub.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+
+#include "../google-dts-base/sw5100-modem.dtsi"
+#include "../google-dts-base/sw5100-common-memory.dtsi"
+#include "../google-dts-base/sw5100-nanohub.dtsi"
+#include "../google-dts-base/sw5100-mcu.dtsi"
+#include "../google-dts-base/sw5100-sim-panel-cmd.dtsi"
+
+#include "kenari-boe-display.dtsi"
+#include "meridian-sdc-display.dtsi"
+#include "kenari-sdc-display.dtsi"
+#include "menari-power.dtsi"
+#include "menari-touch.dtsi"
+
+&dsi_wj014sgm_amoled_14_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_nolab_amoled>;
+	qcom,platform-en-gpio = <&pm5100_gpios 1 0>;
+	qcom,platform-en-gpio-always-on;
+	qcom,platform-reset-gpio = <&pm5100_gpios 2 0>;
+	qcom,platform-reset-gpio-always-on;
+	touch,firmware = "novatek_ts_fw_boe_luna.bin";
+};
+
+&dsi_amb133ha01_amoled_13_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_nolab_amoled>;
+	qcom,platform-en-gpio = <&pm5100_gpios 1 0>;
+	qcom,platform-en-gpio-always-on;
+	qcom,platform-reset-gpio = <&pm5100_gpios 2 0>;
+	qcom,platform-reset-gpio-always-on;
+	touch,window-coords = <0 0 426 426>;
+	touch,firmware = "raydium_ts_fw_meridian.bin";
+	touch,selftest-data = <&meridian_raydium_selftest_data>;
+	touch,grid-spec = <1>;
+	touch,edge-rejection-enable;
+	touch,edge-zone-in-pixels = /bits/ 8 <0x2D>;
+	touch,dead-zone-in-pixels = /bits/ 8 <0x08>;
+	touch,framecounter-in-frames = /bits/ 8 <0x28>;
+	touch,landlock-in-pixels = /bits/ 8 <0x1A>;
+};
+
+&dsi_amb149hb01_amoled_15_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_nolab_amoled>;
+	qcom,platform-en-gpio = <&pm5100_gpios 1 0>;
+	qcom,platform-en-gpio-always-on;
+	qcom,platform-reset-gpio = <&pm5100_gpios 2 0>;
+	qcom,platform-reset-gpio-always-on;
+	touch,window-coords = <0 0 480 480>;
+	touch,firmware = "raydium_ts_fw_kenari.bin";
+	touch,selftest-data = <&kenari_raydium_selftest_data>;
+	touch,grid-spec = <1>;
+	touch,edge-rejection-enable;
+	touch,edge-zone-in-pixels = /bits/ 8 <0x32>;
+	touch,dead-zone-in-pixels = /bits/ 8 <0x0A>;
+	touch,framecounter-in-frames = /bits/ 8 <0x28>;
+	touch,landlock-in-pixels = /bits/ 8 <0x1E>;
+};
+
+&dsi_sim_panel_cmd {
+    qcom,panel-supply-entries = <&dsi_panel_pwr_supply_nolab_amoled>;
+};
+
+&sde_dsi {
+	qcom,dsi-default-panel = <&dsi_amb133ha01_amoled_13_cmd>;
+};
+
+&raydium {
+	panel = <&dsi_amb133ha01_amoled_13_cmd &dsi_amb149hb01_amoled_15_cmd>;
+};
+
+&pm5100_charger {
+	/* DCP mode for float chargers */
+	qcom,float-option = <1>;
+
+	/* Always charge on SDP by ignoring ICL requests from USB stack */
+	google,sdp-icl-req-ignored;
+
+	/* Enable HVDCP3 (QC3) charger detection */
+	google,hvdcp3-detect-en;
+};
+
+&google_hvdcp {
+	status = "okay";
+};
+
+&pm5100_l16 {
+	regulator-always-on;
+	qcom,init-enable = <1>;
+};
+
+&pm5100_l21 {
+	regulator-always-on;
+	qcom,init-enable = <1>;
+};
+
+&pmx_sde {
+	sde_dsi_default: sde_dsi_default {
+		pinconf {
+			pins = "gpio1", "gpio2";
+			function = "normal";
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_HIGH>;
+			bias-disable;
+		};
+	};
+};
+
+&sde_dsi {
+	pinctrl-0 = <&sde_dsi_default &sde_te_active>;
+	pinctrl-1 = <&sde_dsi_default &sde_te_suspend>;
+};
+
+&besbev_codec {
+	cdc-mic-bias-supply = <&L19A>;
+	qcom,cdc-mic-bias-voltage = <1800000 1800000>;
+};
+
+&qupv3_se7_2uart_a {
+	status = "disabled";
+};
+
+&qupv3_se7_2uart_b {
+	qcom,auto-suspend-disable;
+	status = "ok";
+};
+
+&qupv3_se7_2uart_active_L3_b {
+	config {
+		bias-pull-up;
+	};
+};
+
+&sensorhub_pmic_irq {
+	pinconf {
+		qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_1P5>;
+	};
+};
+
+&sensorhub_irq1 {
+	mux {
+		pins = "gpio41";
+		function = "gpio";
+	};
+	config {
+		pins = "gpio41";
+		drive-strength = <6>;
+		bias-pull-down;
+		input-enable;
+	};
+};
+
+&sensorhub {
+	sensorhub,pmic_irq_enable = <1>;
+	sensorhub,wakeup-gpio = <&tlmm 80 GPIO_ACTIVE_HIGH>;
+	sensorhub,irq1-gpio = <&tlmm 41 GPIO_ACTIVE_HIGH>;
+	sensorhub,blstatus-gpio = <&tlmm 81 0>;
+	sensorhub,static-supplies = "vdd", "vddh3";
+	sensorhub,vdd-supply = <&L19A>;
+	sensorhub,vdd-voltage = <1800000 1800000>;
+	sensorhub,vdd-current = <10000>;
+	sensorhub,vddh3-supply = <&L13A>;
+	sensorhub,vddh3-voltage = <1200000 1200000>;
+	sensorhub,vddh3-current = <9999>;  // b/379223293#comment53: <10µA so S5A goes into retention
+	sensorhub,mag_control = <0xda46>;
+	sensorhub,bclbig_comp_mode_ctl = <0x4740>;
+	sensorhub,bclbig_comp_en_ctl1 = <0x4746>;
+	sensorhub,bclbig_comp_iadc_interval_hpm = <0x4783>;
+	sensorhub,bclbig_comp_iadc_interval_lpm = <0x4784>;
+	sensorhub,bclbig_comp_iadc_conv_req = <0x4782>;
+	sensorhub,spi_driver_impl = <AMBIQ_FD>;
+	pinctrl-0 = <&sensorhub_nreset &sensorhub_pmic_irq &sensorhub_boot0
+	             &sensorhub_boot2 &sensorhub_blstatus &sensorhub_wakeup &sensorhub_irq1>;
+};
+
+&soc {
+	petc_if: petc_if@0 {
+		compatible = "google,petc_if";
+		display-panels = <&dsi_amb133ha01_amoled_13_cmd
+			&dsi_amb149hb01_amoled_15_cmd>;
+		clones = <&pixart_pat9401 &pon_hlos>;
+	};
+};
+
+&tlmm {
+	sensorhub_pins {
+		sensorhub_blstatus: sensorhub-blstatus {
+			mux {
+				pins = "gpio81";
+				function = "gpio";
+			};
+                        config {
+				pins = "gpio81";
+				bias-pull-down;
+				input-enable;
+			};
+		};
+	};
+};
+
+&dsi_panel_pwr_supply_nolab_amoled {
+	qcom,panel-supply-entry@0 {
+		qcom,supply-enable-load = <12000>;
+		qcom,supply-reset-load = <12000>;
+	};
+};

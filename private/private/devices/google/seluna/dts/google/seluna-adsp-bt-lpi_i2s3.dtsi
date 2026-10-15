@@ -1,0 +1,144 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/interrupt-controller/irq.h>
+
+&lpi_tlmm {
+	lpi_i2s3_sck {
+		lpi_i2s3_sck_sleep: lpi_i2s3_sck_sleep {
+			mux {
+				pins = "gpio14";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio14";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;         /* PULL DOWN */
+				input-enable;
+			};
+		};
+
+		lpi_i2s3_sck_active: lpi_i2s3_sck_active {
+			mux {
+				pins = "gpio14";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio14";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable;           /* NO PULL */
+				input-enable;
+			};
+		};
+	};
+
+	lpi_i2s3_ws {
+		lpi_i2s3_ws_sleep: lpi_i2s3_ws_sleep {
+			mux {
+				pins = "gpio15";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio15";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;         /* PULL DOWN */
+				input-enable;
+			};
+		};
+
+		lpi_i2s3_ws_active: lpi_i2s3_ws_active {
+			mux {
+				pins = "gpio15";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio15";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable;           /* NO PULL */
+				input-enable;
+			};
+		};
+	};
+
+	lpi_i2s3_sd0 {
+		lpi_i2s3_sd0_sleep: lpi_i2s3_sd0_sleep {
+			mux {
+				pins = "gpio16";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio16";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;         /* PULL DOWN */
+				input-enable;
+			};
+		};
+
+		lpi_i2s3_sd0_active: lpi_i2s3_sd0_active {
+			mux {
+				pins = "gpio16";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio16";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable;           /* NO PULL */
+				input-enable;
+			};
+		};
+	};
+
+	lpi_i2s3_sd1 {
+		lpi_i2s3_sd1_sleep: lpi_i2s3_sd1_sleep {
+			mux {
+				pins = "gpio17";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio17";
+				drive-strength = <2>;   /* 2 mA */
+				bias-pull-down;         /* PULL DOWN */
+				input-enable;
+			};
+		};
+
+		lpi_i2s3_sd1_active: lpi_i2s3_sd1_active {
+			mux {
+				pins = "gpio17";
+				function = "func1";
+			};
+
+			config {
+				pins = "gpio17";
+				drive-strength = <8>;   /* 8 mA */
+				bias-disable;           /* NO PULL */
+				input-enable;
+			};
+		};
+	};
+};
+
+&spf_core_platform {
+		cc_tert_mi2s_gpios: cc_pinctrl_tert {
+		compatible = "qcom,msm-cdc-pinctrl";
+		pinctrl-names = "aud_active", "aud_sleep";
+		pinctrl-0 = <&lpi_i2s3_sck_active &lpi_i2s3_ws_active
+				&lpi_i2s3_sd0_active &lpi_i2s3_sd1_active>;
+
+		pinctrl-1 = <&lpi_i2s3_sck_sleep &lpi_i2s3_ws_sleep
+				&lpi_i2s3_sd0_sleep &lpi_i2s3_sd1_sleep>;
+		qcom,lpi-gpios;
+		#gpio-cells = <0>;
+	};
+};
+
+&monaco_snd {
+	qcom,mi2s-tert-audio-intf = <1>;
+	qcom,tert-mi2s-gpios = <&cc_tert_mi2s_gpios>;
+};

@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&pm5100_s5 {
+	regulator-max-microvolt = <1256000>;
+	qcom,init-voltage = <1256000>;
+};
+
+&sensorhub {
+	sensorhub,vddcore_voltage = <1256000>;
+	sensorhub,vddh3-supply = <&S5A>;
+	sensorhub,vddh3-voltage = <1256000 1256000>;
+};

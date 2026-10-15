@@ -1,0 +1,6 @@
+
+&sw5100_batterydata {
+	#include "qbg-battery-profile-placeholder-eos-id39.dtsi"
+	#include "qbg-battery-profile-placeholder-eos-id56.dtsi"
+	#include "qbg-battery-profile-placeholder-eos-id100.dtsi"
+};

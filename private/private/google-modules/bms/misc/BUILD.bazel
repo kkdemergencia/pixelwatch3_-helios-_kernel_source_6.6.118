@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load("@kleaf//build/kernel/kleaf:kernel.bzl", "ddk_module", "kernel_module_group")
+
+filegroup(
+    name = "headers",
+    srcs = [
+        "gvotable.h",
+        "logbuffer.h",
+    ],
+    visibility = [
+        "//private/google-modules/bms:__pkg__",
+    ],
+)
+
+ddk_module(
+    name = "logbuffer",
+    srcs = [
+        "logbuffer.c",
+        ":headers",
+    ],
+    out = "logbuffer.ko",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules/bluetooth/broadcom:__subpackages__",
+        "//private/google-modules/bms:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google/kamino:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/qcom:__pkg__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)
+
+ddk_module(
+    name = "gvotable",
+    srcs = [
+        "gvotable.c",
+        ":headers",
+    ],
+    out = "gvotable.ko",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules/bluetooth/broadcom:__subpackages__",
+        "//private/google-modules/bms:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google/kamino:__pkg__",
+        "//private/google-modules/soc/msm/drivers/power/supply/qcom:__pkg__",
+    ],
+    deps = [
+        "//private/msm-google:all_headers_aarch64",
+    ],
+)
+
+kernel_module_group(
+    name = "bms-misc",
+    srcs = [
+        ":gvotable",
+        ":logbuffer",
+    ],
+    visibility = [
+        "//private/google-modules/bms:__pkg__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)

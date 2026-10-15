@@ -1,0 +1,2 @@
+per-file qrtr/*.*=set noparent
+per-file qrtr/*.*=file:kernel/private/google-modules/soc/msm:/OWNERS

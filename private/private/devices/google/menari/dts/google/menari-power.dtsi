@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: GPL-2.0
+
+&pm5100_gpios {
+	kamino_pins {
+		kamino_heartbeat_en: kamino-heartbeat-en {
+			pinconf {
+				pins = "gpio15";
+				function = "normal";
+				bias-disable;
+				drive-open-source;
+				qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
+				power-source = <1>; /* VREG_L19A */
+				output-low;
+			};
+		};
+
+		kamino_status1: kamino-status1 {
+			pinconf {
+				pins = "gpio7";
+				function = "normal";
+				bias-pull-up;
+				input-enable;
+			};
+		};
+
+		kamino_status2: kamino-status2 {
+			pinconf {
+				pins = "gpio3";
+				function = "normal";
+				bias-pull-up;
+				input-enable;
+			};
+		};
+	};
+};
+
+&soc {
+	google_kamino: google,kamino {
+		compatible = "google,kamino";
+		google,heartbeat-en-gpios = <&pm5100_gpios 15 GPIO_ACTIVE_LOW>;
+		google,status-gpios = <&pm5100_gpios 7 0>, <&pm5100_gpios 3 0>;
+		google,psy-name = "usb";
+		google,fast-chg-ma = /bits/ 16 <1100>;
+		google,slow-chg-ma = /bits/ 16 <400>;
+		google,periodic-reauth-enable;
+		/*
+		 * While plugged in, trigger a reauth:
+		 *   - 100 ms after plugin
+		 *   - 2 seconds after reauth above (2.1 sec after plugin)
+		 *   - 30 seconds after that (32.1 seconds after plugin)
+		 *   - Every 2 minutes thereafter
+		 */
+		google,reauth-oneshot-timings-ms = <100 2000 30000>;
+		google,reauth-periodic-timing-ms = <120000>;
+
+		/* Experimentally determined */
+		google,reauth-power-disconnect-min-wait-ms = /bits/ 16 <120>;
+		google,reauth-power-disconnect-timeout-ms = /bits/ 16 <150>;
+		google,reauth-power-reconnect-min-wait-ms = /bits/ 16 <80>;
+		google,reauth-power-reconnect-timeout-ms = /bits/ 16 <100>;
+
+		/*
+		 * Latch duration when moisture is detected.
+		 * Value from UX guidance.
+		 */
+		google,moisture-sw-latch-ms = <65000>;
+
+		/*
+		 * If watch goes on-power and no new moisture events occur
+		 * within 3 seconds, break the moisture latch early.
+		 * 3 seconds encompasses the 100 ms and 2s reauth attempts.
+		 */
+		google,early-moisture-unlatch-timeout-ms = <3000>;
+
+		/*
+		 * The first moisture detection causes power to turn off for
+		 * 500 ms. Afterwards another moisture check will occur, so set
+		 * the false positive window to 100 ms longer in order to catch
+		 * any subsequent moisture event.
+		 */
+		google,moisture-false-positive-filter-ms = <600>;
+
+		/* While in false positive, fake that we're on-power */
+		google,moisture-false-positive-fakes-psy-connected;
+
+		/* Provide a DOCK extcon to the system */
+		google,provide-extcon;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&kamino_heartbeat_en &kamino_status1 &kamino_status2>;
+		status = "okay";
+	};
+};
+
+&pm5100_charger {
+	/* HW limit */
+	qcom,usb-icl-ua = <1100000>;
+
+	/*
+	 * Until the Kamino module initializes and starts controlling the ICL,
+	 * set an intermediate ICL of 400 mA.
+	 */
+	google,ext-ctl-interim-icl-ua = <400000>;
+
+	/* Wait 500 ms before reporting power disconnected */
+	google,unplug-debounce-ms = /bits/ 16 <500>;
+
+	/* Workaround: Use pulldown on CHG_BST to avoid Vreg settle timeout. */
+	google,chg-bst-pulldown-wa;
+};
+
+&google_bms {
+	google,chg-buck-fsw-sel-1p35;
+};
+
+&google_charger {
+	google,cc-update-interval = <2000>;
+};

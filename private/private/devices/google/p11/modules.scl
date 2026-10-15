@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""File containing information about kernel modules for p11."""
+
+P11_VENDOR_KERNEL_BOOT_MODULES = [
+]
+
+P11_VENDOR_KERNEL_BOOT_RECOVERY_MODULES = [
+    # keep sorted
+    "pt.ko",
+    "pt_debug.ko",
+    "pt_device_access.ko",
+    "pt_i2c.ko",
+    "pt_loader.ko",
+    "ptdevtree.ko",
+]
+
+P11_VENDOR_DLKM_MODULES = [
+    # keep sorted
+    "bt_fm_slim.ko",
+    "btpower.ko",
+    "cnss_nl.ko",
+    "cnss_prealloc.ko",
+    "cnss_utils.ko",
+    "google_wlan_mac.ko",
+    "icnss2.ko",
+    "pt.ko",
+    "pt_debug.ko",
+    "pt_device_access.ko",
+    "pt_i2c.ko",
+    "pt_loader.ko",
+    "ptdevtree.ko",
+    "radio-i2c-rtc6226-qca.ko",
+    "wlan.ko",
+    "wlan_firmware_service.ko",
+]
+
+P11_VENDOR_DLKM_BLOCKLIST_MODULES = [
+    # keep sorted
+]

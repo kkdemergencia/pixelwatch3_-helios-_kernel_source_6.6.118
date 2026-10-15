@@ -1,0 +1,54 @@
+/*
+ * Mix & Match of meridian-battery.dtsi and kenari-battery.dtsi to ensure safe
+ * charging on both batteries.
+ */
+
+#include "kenari-battery-profiles.dtsi"
+#include "meridian-battery-profiles.dtsi"
+
+&google_battery {
+		/* meridian-battery.dtsi specifies the smaller capacity */
+		google,chg-battery-capacity = <327>;
+
+		/*
+		 * charge table - meridian-battery.dtsi with 2nd step removed.
+		 * Both products' batteries have the same temperature limits,
+		 * float voltage, and a charge step at 4.2V, Meridian
+		 * has a step at 4.35V while kenari does not.
+		 */
+		google,chg-temp-limits = <0 100 200 430 460>;
+		google,chg-cv-limits = <
+					4200000 4480000
+					>;
+		/* units are C rate in percent */
+		google,chg-cc-limits = <
+			69  23		// 225mA  75mA
+			115 69		// 375mA 225mA
+			306 100		// 1000mA 325mA
+			199 100		// 650mA 325mA
+		>;
+};
+
+&google_charger {
+		google,thermal-mitigation = <4000000 3500000 3000000
+						2500000 2000000 1500000
+						1000000 500000>;
+		//google,thermal-pd-wa;
+		google,fv-max-uv = <4480000>;
+		google,chg-termination-5v;
+};
+
+&pm5100_charger {
+	qcom,fv-max-uv = <4480000>;
+	qcom,fcc-max-ua = <1000000>;
+
+	/*
+	 * The default charge termination current is 20mA (monaco-pmic.dtsi),
+	 * but kenari-batteri.dtsi configures an earlier termination, at 25mA.
+	 */
+	qcom,chg-term-current-ma = <(-25)>;
+};
+
+&pm5100_qbg {
+	qcom,iterm-ma = <60>;
+};

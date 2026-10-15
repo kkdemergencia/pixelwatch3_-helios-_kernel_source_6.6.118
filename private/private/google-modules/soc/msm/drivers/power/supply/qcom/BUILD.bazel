@@ -1,0 +1,133 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load(
+    "@kleaf//build/kernel/kleaf:kernel.bzl",
+    "ddk_headers",
+    "ddk_module",
+    "kernel_module_group",
+)
+
+filegroup(
+    name = "qcom_battery_modules.kconfig",
+    srcs = [
+        "Kconfig",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)
+
+filegroup(
+    name = "qcom_battery_modules.makefile",
+    srcs = [
+        "Makefile",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)
+
+ddk_headers(
+    name = "qcom_battery_headers",
+    hdrs = glob([
+        "*.h",
+    ]),
+    includes = ["."],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google:__pkg__",
+    ],
+)
+
+ddk_module(
+    name = "qpnp-smblite-main",
+    srcs = [
+        "battery.c",
+        "battery.h",
+        "battery-profile-loader.c",
+        "battery-profile-loader.h",
+        "pmic-voter-compat.c",
+        "qpnp-smblite.c",
+        "schgm-flashlite.c",
+        "schgm-flashlite.h",
+        "smb5-iio.h",
+        "smblite-iio.c",
+        "smblite-lib.c",
+        "smblite-lib.h",
+        "smblite-reg.h",
+        "smblite-remote-bms.c",
+        "smblite-remote-bms.h",
+        "smblite-shim.c",
+        "smblite-shim.h",
+        "smblite-shim-plug-debounce.c",
+        "smblite-shim-plug-debounce.h",
+        "smbx-get-chan.c",
+        "step-chg-jeita.c",
+        "step-chg-jeita.h",
+        "storm-watch.c",
+        "storm-watch.h",
+    ],
+    out = "qpnp-smblite-main.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+        "GOOGLE_DISABLE_SOFT_JEITA_INHIBIT_CHARGING",
+        "GOOGLE_CHG_DISABLE_IS_NOOP",
+    ],
+    visibility = [
+        "//private/google-modules:__subpackages__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/bms:misc-headers",
+        "//private/google-modules/bms/misc:gvotable",
+        "//private/google-modules/soc/msm:msm_soc_headers",
+    ],
+)
+
+ddk_module(
+    name = "qti-qbg-main",
+    srcs = [
+        "battery-profile-loader.c",
+        "battery-profile-loader.h",
+        "qbg-battery-profile.c",
+        "qbg-battery-profile.h",
+        "qbg-core.h",
+        "qbg-iio.h",
+        "qbg-sdam.c",
+        "qbg-sdam.h",
+        "qti-qbg.c",
+    ],
+    out = "qti-qbg-main.ko",
+    defconfig = "defconfig",
+    kconfig = "Kconfig",
+    kernel_build = "//private/google-modules/soc/msm:msm_kernel_build",
+    local_defines = [
+        # do not sort
+        "DYNAMIC_DEBUG_MODULE",
+    ],
+    visibility = [
+        "//private/google-modules:__subpackages__",
+        "//private/google-modules/soc/msm/drivers/power/supply/google:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/soc/msm:msm_soc_headers",
+    ],
+)
+
+kernel_module_group(
+    name = "qcom_battery_modules",
+    srcs = [
+        ":qpnp-smblite-main",
+        ":qti-qbg-main",
+    ],
+    visibility = [
+        "//private/google-modules/soc/msm:__pkg__",
+    ],
+)

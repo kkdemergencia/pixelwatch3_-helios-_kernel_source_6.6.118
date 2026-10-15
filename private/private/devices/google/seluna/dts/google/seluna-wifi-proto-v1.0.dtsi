@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Google Agumon wlan device tree source
+// Copyright 2023 Google,LLC
+
+#include "seluna-wifi.dtsi"
+
+&wl_reg_on {
+	mux {
+		pins = "gpio93";
+	};
+	config {
+		pins = "gpio93";
+	};
+};
+
+&wlan_gpios {
+	wl_reg_on = <&tlmm 93 0>;
+};

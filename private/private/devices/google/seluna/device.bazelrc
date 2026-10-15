@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (C) 2024 Google LLC
+
+build:seluna --config=mcu_transport_autobahn_frame_1032b
